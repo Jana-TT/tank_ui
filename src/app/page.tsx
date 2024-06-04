@@ -1,4 +1,4 @@
-import DataFetchingComponent from "./display_data";
+import DataFetchingComponent from "./fetch_data";
 
 export default function MyApp() {
     return (
