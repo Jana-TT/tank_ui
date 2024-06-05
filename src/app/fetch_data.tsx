@@ -1,8 +1,8 @@
 'use client';
 
-import { Tenali_Ramakrishna } from 'next/font/google';
 import React, {useState, useEffect} from 'react';
-import { convertToFeet } from './format_data';
+import { convertToFeet } from './inches_to_feet';
+import { percent_full_tank } from './percent_full_display';
 
 interface Tank{
     primo_id: string;
@@ -32,7 +32,7 @@ const DataFetchingComponent = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const req: RequestPayload = { primo_ids: ["69419"], tank_types: ["Oil"]}; // my request payload
+                const req: RequestPayload = { primo_ids: ["69419", "480001"], tank_types: ["Oil", "Water"]}; // my request payload
                 const response = await fetch('https://tank-project-2-glgjkoxnua-uc.a.run.app/tanks', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -54,20 +54,26 @@ const DataFetchingComponent = () => {
         fetchData();
     }, []);
 
+    const displayed_primo_id = new Set<string>(); //set used for unique values, arrays are use for duplicate values 
+
     return (
         <div>
             {data ? (
                 <div>
-                    {data.tanks.map((tank, index) => {
-    
+                    {data.tanks.map((tank) => {
+                        const unique_primo_id: boolean = !displayed_primo_id.has(tank.primo_id) //if doesnt have the current primo_id
+                        if (unique_primo_id) {
+                            displayed_primo_id.add(tank.primo_id); //add it
+                        }
                         return (
-                            <div key={index}>
-                                <p>Primo ID: {tank.primo_id}</p>
+                            <div>
+                                <h4>{unique_primo_id && <p>{tank.primo_id}</p>}</h4>
+                                <p>{tank.percent_full}% {percent_full_tank(tank.percent_full, tank.tank_type)}</p>
                                 <p>{tank.tank_type} Tank #{tank.tank_number}</p>
                                 <p>Tank Capacity: {tank.Capacity}</p>
                                 <p>{convertToFeet(tank.Level)} tank level</p>
-                                <p>Volume: {tank.Volume}</p>
-                                <p>{convertToFeet(tank.InchesToESD)} to ESD</p>
+                                <p>Volume: {tank.Volume} bbl</p>
+                                {tank.InchesToESD !== null && (<p>{convertToFeet(tank.InchesToESD)} to ESD</p>)}
                                 <hr />
                             </div>
                         );
