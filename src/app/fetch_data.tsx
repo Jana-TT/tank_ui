@@ -3,8 +3,9 @@
 import React, {useState, useEffect} from 'react';
 import { convertToFeet } from './inches_to_feet';
 import { percent_full_tank } from './percent_full_display';
+import Fuse from 'fuse.js';
 
-interface Tank{
+interface Tank {
     primo_id: string;
     tank_type: string;
     tank_number: number;
@@ -15,10 +16,21 @@ interface Tank{
     Capacity: number;
     percent_full: number;
 }
-//using interface to define the structure of my JSON data 
 
-interface TankData{
+interface TankData {
     tanks: Tank[];
+}
+
+interface Facility {
+    primo_id: string;
+    division_name: string;
+    division_id: string;
+    entity_type: string;
+    entity_name: string;
+}
+
+interface FacilityData {
+    facilities: Facility[];
 }
 
 interface RequestPayload {
@@ -27,24 +39,34 @@ interface RequestPayload {
 }
 
 const DataFetchingComponent = () => {
-    const [data, setData] = useState<TankData | null>(null); //type safety: <TankData | null>: either a valid TankData object or null
+    const [data, setData] = useState<TankData | null>(null);
+    const [facData, setFacData] = useState<FacilityData | null>(null);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [filteredTanks, setFilteredTanks] = useState<Tank[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const req: RequestPayload = { primo_ids: ["69419", "480001"], tank_types: ["Oil", "Water"]}; // my request payload
+                const req: RequestPayload = { primo_ids: ["69419", "480001"], tank_types: ["Oil", "Water"]}; 
                 const response = await fetch('https://tank-project-2-glgjkoxnua-uc.a.run.app/tanks', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(req)
                 });
 
-                if(!response.ok) {
+                const fac_res = await fetch('https://tank-project-2-glgjkoxnua-uc.a.run.app/facilities', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json'}
+                });
+
+                if(!response.ok || !fac_res.ok) {
                     throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
                 }
 
                 const result: TankData = await response.json();
+                const fac_result: FacilityData = await fac_res.json();
                 setData(result);
+                setFacData(fac_result);
                 
             } catch(error) {
                 console.error('Error fetching data:', error);
@@ -54,19 +76,46 @@ const DataFetchingComponent = () => {
         fetchData();
     }, []);
 
-    const displayed_primo_id = new Set<string>(); //set used for unique values, arrays are use for duplicate values 
+    useEffect(() => {
+        if(searchTerm && facData){
+            const fuzzy_search = new Fuse(facData.facilities, {
+                keys: ['entity_name', 'division_name'],
+                threshold: 0.5
+            });
+
+            const result = fuzzy_search.search(searchTerm);
+            const extract_primo_id = result.map(res => res.item.primo_id);
+
+            if(data){
+                const filtered = data.tanks.filter(tank => extract_primo_id.includes(tank.primo_id));
+                setFilteredTanks(filtered);
+            } else {
+                setFilteredTanks([]);
+            }
+        } else {
+            setFilteredTanks([]);
+        }
+    }, [searchTerm, data, facData]);
+
+    const displayed_primo_id = new Set<string>();
 
     return (
         <div>
             {data ? (
                 <div>
-                    {data.tanks.map((tank) => {
-                        const unique_primo_id: boolean = !displayed_primo_id.has(tank.primo_id) //if doesnt have the current primo_id
+                    <input 
+                        type='text' 
+                        value={searchTerm} 
+                        onChange={(e) => setSearchTerm(e.target.value)} 
+                        placeholder="Search by facility or city name"
+                    />
+                    {filteredTanks.map((tank) => {
+                        const unique_primo_id: boolean = !displayed_primo_id.has(tank.primo_id);
                         if (unique_primo_id) {
-                            displayed_primo_id.add(tank.primo_id); //add it
+                            displayed_primo_id.add(tank.primo_id);
                         }
                         return (
-                            <div>
+                            <div key={tank.primo_id}>
                                 <h4>{unique_primo_id && <p>{tank.primo_id}</p>}</h4>
                                 <p>{tank.percent_full}% {percent_full_tank(tank.percent_full, tank.tank_type)}</p>
                                 <p>{tank.tank_type} Tank #{tank.tank_number}</p>
