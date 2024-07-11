@@ -11,10 +11,12 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@mui/material": "^5.15.16",
+    "@mui/icons-material": "^5.15.21",
+    "@mui/material": "^5.15.21",
+    "@mui/x-tree-view": "^7.8.0",
     "flexsearch": "^0.7.43",
     "fuse.js": "^7.0.0",
-    "next": "14.2.3",
+    "next": "^14.2.5",
     "react": "^18",
     "react-autosuggest": "^10.1.0",
     "react-dom": "^18"

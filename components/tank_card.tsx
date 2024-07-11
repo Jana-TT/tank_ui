@@ -11,29 +11,30 @@ interface TankCardProps {
     tank: Tank;
 }
 
-const TankCard: React.FC<TankCardProps> = ({ tank }) => {
+const TankCard: React.FC<TankCardProps> = ({tank}) => {
     return (
-        <Card variant="outlined" sx={{ marginBottom: 2, backgroundColor: '#191919', width: '200px'}}>
-            <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center'}}>
-
-                    <Box sx={{ width: '50px', height: 'auto', marginRight: '16px' }}>
-                        <Typography sx={{ color: 'white' }}>{percent_full_tank(tank.percent_full, tank.tank_type, tank.Capacity)}</Typography>
+        <div>
+            <Card sx={{marginBottom: 2, backgroundColor: '#191919', width: '180px', overflow: 'hidden', height: '110px'}}>
+                <CardContent sx={{padding: '8px', height: '100%'}}>
+                    <Box sx={{display: 'flex', alignItems: 'flex-start', height: '100%'}}>
+                        <Box sx={{ width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+                            <Typography sx={{ color: 'white'}}>{percent_full_tank(tank.percent_full, tank.tank_type, tank.Capacity)}</Typography>
+                        </Box>
+                        <Box sx={{marginTop: 1, marginLeft: 1}}>
+                            <Typography sx={{fontSize: '0.90rem', textAlign: 'left',color: tank.tank_type == "Oil" ? '#5bb450' : '#33c7d8', fontWeight: 'bold'}}>{tank.tank_type} Tank #{tank.tank_number}</Typography>
+                            <Typography sx={{fontSize: '0.90rem', color: 'white', textAlign: 'left'}}>Level: {convertToFeet(tank.Level)}</Typography>
+                            <Typography sx={{fontSize: '0.90rem', color: 'white', textAlign: 'left', marginBottom: 0.3}}>Capacity: {tank.Capacity} bbl</Typography>
+                            <Box sx={{background:'#6495ED', width: 'fit-content', borderRadius: '2px'}}>
+                                {tank.InchesToESD !== null && (<Typography sx={{fontSize: '0.90rem', color: 'white', textAlign: 'left', marginRight: 0.5, marginLeft: 0.5}}>{convertToFeet(tank.InchesToESD)} to ESD</Typography>)} 
+                            </Box>
+                        </Box>
                     </Box>
-                    <Box>
-                        <Typography sx={{ color: 'white', textAlign: 'right'}}>{tank.tank_type} Tank #{tank.tank_number}</Typography>
-                        <Typography sx={{ color: 'white', textAlign: 'right'}}>Capacity: {tank.Capacity}</Typography>
-                        <Typography sx={{ color: 'white', textAlign: 'left'}}>Level: {convertToFeet(tank.Level)}</Typography>
-                        <Typography sx={{ color: 'white', textAlign: 'right'}}>Volume: {tank.Volume} bbl</Typography>
-                        {tank.InchesToESD !== null && (<Typography sx={{ color: 'white', textAlign: 'right'}}>{convertToFeet(tank.InchesToESD)} to ESD</Typography>)}
-                    </Box>
-                </Box>
-            </CardContent>
-        </Card>
+                </CardContent>
+            </Card>
+        </div>
     );
 }
 
 export default TankCard;
 
 
-//<Typography sx={{ color: 'white' }}>{tank.primo_id}</Typography>
