@@ -15,10 +15,8 @@
     "@mui/material": "^5.15.21",
     "@mui/x-tree-view": "^7.8.0",
     "flexsearch": "^0.7.43",
-    "fuse.js": "^7.0.0",
     "next": "^14.2.5",
     "react": "^18",
-    "react-autosuggest": "^10.1.0",
     "react-dom": "^18"
   },
   "devDependencies": {
@@ -26,7 +24,6 @@
     "@types/lunr": "^2.3.7",
     "@types/node": "^20",
     "@types/react": "^18",
-    "@types/react-autosuggest": "^10.1.11",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
