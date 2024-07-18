@@ -7,7 +7,7 @@ import { convertToFeet } from './inches_to_feet';
 import { percent_full_tank } from './percent_full_display';
 import Box from '@mui/material/Box';
 
-interface TankCardProps {
+type TankCardProps =  {
     tank: Tank;
 }
 
@@ -18,14 +18,14 @@ const TankCard: React.FC<TankCardProps> = ({tank}) => {
                 <CardContent sx={{padding: '8px', height: '100%'}}>
                     <Box sx={{display: 'flex', alignItems: 'flex-start', height: '100%'}}>
                         <Box sx={{ width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
-                            <Typography sx={{ color: 'white'}}>{percent_full_tank(tank.percent_full, tank.tank_type, tank.Capacity)}</Typography>
+                            <Typography sx={{ color: 'white'}}>{percent_full_tank(tank.percent_full, tank.tank_type, tank.capacity)}</Typography>
                         </Box>
                         <Box sx={{marginTop: 1, marginLeft: 1}}>
                             <Typography sx={{fontSize: '0.90rem', textAlign: 'left',color: tank.tank_type == "Oil" ? '#5bb450' : '#33c7d8', fontWeight: 'bold'}}>{tank.tank_type} Tank #{tank.tank_number}</Typography>
-                            <Typography sx={{fontSize: '0.90rem', color: 'white', textAlign: 'left'}}>Level: {convertToFeet(tank.Level)}</Typography>
-                            <Typography sx={{fontSize: '0.90rem', color: 'white', textAlign: 'left', marginBottom: 0.3}}>Capacity: {tank.Capacity} bbl</Typography>
+                            <Typography sx={{fontSize: '0.90rem', color: 'white', textAlign: 'left'}}>Level: {convertToFeet(tank.level)}</Typography>
+                            <Typography sx={{fontSize: '0.90rem', color: 'white', textAlign: 'left', marginBottom: 0.3}}>Capacity: {tank.capacity} bbl</Typography>
                             <Box sx={{background:'#6495ED', width: 'fit-content', borderRadius: '2px'}}>
-                                {tank.InchesToESD !== null && (<Typography sx={{fontSize: '0.90rem', color: 'white', textAlign: 'left', marginRight: 0.5, marginLeft: 0.5}}>{convertToFeet(tank.InchesToESD)} to ESD</Typography>)} 
+                                {tank.inches_to_esd !== null && (<Typography sx={{fontSize: '0.90rem', color: 'white', textAlign: 'left', marginRight: 0.5, marginLeft: 0.5}}>{convertToFeet(tank.inches_to_esd)} to ESD</Typography>)} 
                             </Box>
                         </Box>
                     </Box>
