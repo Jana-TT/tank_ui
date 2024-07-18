@@ -1,32 +1,34 @@
-export interface Tank {
+export type Tank = {
     primo_id: string;
     tank_type: string;
     tank_number: number;
-    Level: number;
-    Volume: number;
-    InchesToESD: number | null;
-    TimeUntilESD: number | null;
-    Capacity: number;
+    level: number;
+    volume: number;
+    inches_to_esd: number | null;
+    time_until_esd: number | null;
+    capacity: number;
     percent_full: number;
 }
 
-export interface TankData {
+export type TankData = {
     tanks: Tank[];
 }
 
-export interface Facility {
+export type Facility = {
     primo_id: string;
     division_name: string;
     division_id: string;
     entity_type: string;
     entity_name: string;
+    route_name: string;
+    foreman_name: string;
 }
 
-export interface FacilityData {
+export type FacilityData = {
     facilities: Facility[];
 }
 
-export interface RequestPayload {
+export type RequestPayload = {
     primo_ids: string[];
     tank_types: string[];
 }

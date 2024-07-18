@@ -36,6 +36,7 @@ export const DataTransform = () => {
 
     const extract_fac_names: string[] = facData?.facilities.map(facility_names => facility_names.entity_name) || [];
     const extract_division_names: string[] = facData?.facilities.map(division_name => division_name.division_name) || [];
+    const extract_foreman_names: string[] = facData?.facilities.map(foreman_names => foreman_names.foreman_name) || [];
     const search_list: string[] = extract_fac_names.concat(extract_division_names);
     const search_list_2: string[] = ["pp", "poopie", "testing", "this"];
     const search_list_3: string[] = ["pp", "poopie", "testing", "this"];
@@ -57,7 +58,7 @@ export const DataTransform = () => {
     };
 
     const handleButtonClick2 = () => {
-        setSelectedRoute('');
+        setSelectedForeman('');
     }  
 
     return (
@@ -77,7 +78,7 @@ export const DataTransform = () => {
                             sx={{height: '30px', fontSize: '12px', padding: '8px',
                             }}
                         >
-                            {search_list_2.map((element, index) => (
+                            {extract_division_names.map((element, index) => (
                                 <MenuItem key={index} value={element} sx={{ fontSize: '12px' }}>{element}</MenuItem>
                             ))}
                         </Select>
@@ -86,18 +87,30 @@ export const DataTransform = () => {
             </Container>
 
             <Container>
-                <FormControl sx={{ backgroundColor: 'gray', width: '150px', height: '30px'}}>
-                    <InputLabel sx={{ fontSize: '12px' }}>Select Foreman</InputLabel>
+                {selectedForeman ? (
+                    <Box sx={{display: 'flex', alignItems: 'center', backgroundColor: 'gray', padding: '8px', borderRadius: '4px' }}> 
+                        <ArrowBackIcon onClick={handleButtonClick2} sx={{cursor: 'pointer', margineRight:'8px'}}/>
+                        <Typography variant="body1" sx={{ fontSize: '12px' }}>{selectedForeman}</Typography>
+                    </Box>
+                   
+                ) : (                    
+                <FormControl sx={{ backgroundColor: 'gray', width: '150px', height: '30px' }}>
+                    <InputLabel sx={{ fontSize: '12px' }}>Select foreman</InputLabel>
                     <Select
                         value={selectedForeman}
                         onChange={handleForemanChange}
-                        sx={{height: '30px', fontSize: '12px', padding: '8px'}}
+                        sx={{height: '30px', fontSize: '12px', padding: '8px',
+                        }}
                     >
-                        {search_list_3.map((element, index) => (
+                        {extract_foreman_names.map((element, index) => (
                             <MenuItem key={index} value={element} sx={{ fontSize: '12px' }}>{element}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
+                
+            )
+
+                }
             </Container>
 
             <Container>
@@ -109,7 +122,7 @@ export const DataTransform = () => {
                         onChange={handleRouteChange}
                         sx={{height: '30px', fontSize: '12px', padding: '8px'}}
                     >
-                        {search_list_3.map((element, index) => (
+                        {extract_fac_names.map((element, index) => (
                             <MenuItem key={index} value={element} sx={{ fontSize: '12px' }}>{element}</MenuItem>
                         ))}
                     </Select>

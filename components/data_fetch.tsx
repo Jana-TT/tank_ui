@@ -3,7 +3,7 @@ import { FacilityData, TankData, RequestPayload } from './interfaces';
 type Result<T> = { data: T; error: null } | { data: null; error: Error };
 
 export const fetchFacilityData = async (): Promise<Result<FacilityData>> => {
-    const fac_response = await fetch('https://tank-project-2-glgjkoxnua-uc.a.run.app/facilities', {
+    const fac_response = await fetch('https://tanks-api.wolfeydev.com/facilities', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     });
@@ -18,7 +18,7 @@ export const fetchFacilityData = async (): Promise<Result<FacilityData>> => {
 
 export const fetchTankData = async (primoids: string[]): Promise<Result<TankData>> => {
     const req: RequestPayload = {primo_ids: primoids, tank_types: ["Oil", "Water"]};
-    const tank_response = await fetch('https://tank-project-2-glgjkoxnua-uc.a.run.app/tanks', {
+    const tank_response = await fetch('https://tanks-api.wolfeydev.com/tanks', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(req)
