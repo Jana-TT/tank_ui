@@ -14,7 +14,7 @@ type TankCardProps =  {
 const TankCard: React.FC<TankCardProps> = ({tank}) => {
     return (
         <div>
-            <Card sx={{marginBottom: 2, backgroundColor: '#191919', width: '200px', overflow: 'hidden', height: '120px', boxShadow:'0px 8px 8px rgba(0, 0, 0, 0.1)'}}>
+            <Card sx={{marginBottom: 2, backgroundColor: '#191919', width: '200px', overflow: 'hidden', height: '130px', boxShadow:'0px 8px 8px rgba(0, 0, 0, 0.1)'}}>
                 <CardContent sx={{padding: '15px', height: '100%'}}>
                     <Box sx={{display: 'flex', alignItems: 'flex-start', height: '100%'}}>
                         <Box sx={{ width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>

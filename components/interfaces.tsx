@@ -1,5 +1,5 @@
 export type Tank = {
-    primo_id: string;
+    property_id: string;
     tank_type: string;
     tank_number: number;
     level: number;
@@ -15,11 +15,10 @@ export type TankData = {
 }
 
 export type Facility = {
-    primo_id: string;
+    property_id: string;
     division_name: string;
     division_id: string;
-    entity_type: string;
-    entity_name: string;
+    facility_name: string;
     route_name: string;
     foreman_name: string;
 }
@@ -29,6 +28,6 @@ export type FacilityData = {
 }
 
 export type RequestPayload = {
-    primo_ids: string[];
+    property_ids: string[];
     tank_types: string[];
 }

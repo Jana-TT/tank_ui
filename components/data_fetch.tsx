@@ -17,7 +17,7 @@ export const fetchFacilityData = async (): Promise<Result<FacilityData>> => {
 };
 
 export const fetchTankData = async (primoids: string[]): Promise<Result<TankData>> => {
-    const req: RequestPayload = {primo_ids: primoids, tank_types: ["Oil", "Water"]};
+    const req: RequestPayload = {property_ids: primoids, tank_types: ["Oil", "Water"]};
     const tank_response = await fetch('https://tanks-api.wolfeydev.com/tanks', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
