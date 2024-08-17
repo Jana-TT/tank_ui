@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -9,12 +9,14 @@ import Box from '@mui/material/Box';
 
 type TankCardProps =  {
     tank: Tank;
+    onClick: () => void;
 }
 
-const TankCard: React.FC<TankCardProps> = ({tank}) => {
+const TankCard: React.FC<TankCardProps> = ({tank, onClick}) => {
+
     return (
         <div>
-            <Card sx={{marginBottom: 2, backgroundColor: '#191919', width: '200px', overflow: 'hidden', height: '130px', boxShadow:'0px 8px 8px rgba(0, 0, 0, 0.1)'}}>
+            <Card onClick={onClick} sx={{marginBottom: 2, backgroundColor: '#191919', width: '200px', overflow: 'hidden', height: '130px', boxShadow:'0px 8px 8px rgba(0, 0, 0, 0.1)', cursor: 'pointer'}}>
                 <CardContent sx={{padding: '15px', height: '100%'}}>
                     <Box sx={{display: 'flex', alignItems: 'flex-start', height: '100%'}}>
                         <Box sx={{ width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
@@ -27,6 +29,9 @@ const TankCard: React.FC<TankCardProps> = ({tank}) => {
                             <Box sx={{background:'#6495ED', width: 'fit-content', borderRadius: '2px'}}>
                                 {tank.inches_to_esd !== null && (<Typography sx={{fontSize: '0.95rem', color: 'white', textAlign: 'left', marginRight: 0.5, marginLeft: 0.5}}>{convertToFeet(tank.inches_to_esd)} to ESD</Typography>)} 
                             </Box>
+                            <Box sx={{ width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+                                <Typography sx={{ color: 'white'}}>{tank.scada_id}</Typography>
+                            </Box>
                         </Box>
                     </Box>
                 </CardContent>
@@ -36,5 +41,4 @@ const TankCard: React.FC<TankCardProps> = ({tank}) => {
 }
 
 export default TankCard;
-
 

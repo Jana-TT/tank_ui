@@ -1,5 +1,6 @@
 export type Tank = {
     property_id: string;
+    scada_id: string;
     tank_type: string;
     tank_number: number;
     level: number;
@@ -30,4 +31,19 @@ export type FacilityData = {
 export type RequestPayload = {
     property_ids: string[];
     tank_types: string[];
+}
+
+export type TankTs = {
+    tank_metric: string;
+    uom: string;
+    timestamps: Date[];
+    values: number[];
+}
+
+export type TankTsData = {
+    timeseries: TankTs[];
+}
+
+export type RequestPayloadTS = {
+    scada_id: string
 }

@@ -1,4 +1,4 @@
-import { FacilityData, TankData, RequestPayload } from './interfaces';
+import { FacilityData, TankData, RequestPayload, TankTsData, RequestPayloadTS } from './interfaces';
 
 type Result<T> = { data: T; error: null } | { data: null; error: Error };
 
@@ -16,19 +16,36 @@ export const fetchFacilityData = async (): Promise<Result<FacilityData>> => {
     return {data, error: null};
 };
 
-export const fetchTankData = async (primoids: string[]): Promise<Result<TankData>> => {
-    const req: RequestPayload = {property_ids: primoids, tank_types: ["Oil", "Water"]};
-    const tank_response = await fetch('https://tanks-api.wolfeydev.com/tanks', {
+
+export const fetchTanksData = async (propertyIds: string[]): Promise<Result<TankData>> => {
+    const req: RequestPayload = { property_ids: propertyIds, tank_types: ["Oil", "Water"] };
+    const tankResponse = await fetch('https://tanks-api.wolfeydev.com/tanks', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(req)
     });
 
-    if (!tank_response.ok) {
-        return {data: null, error: new Error(`Network response was not ok: ${tank_response.status} ${tank_response.statusText}`)};
+    if (!tankResponse.ok) {
+        return { data: null, error: new Error(`Network response was not ok: ${tankResponse.status} ${tankResponse.statusText}`) };
     }
 
-    const data: TankData = await tank_response.json();
-    return {data, error: null};
+    const data: TankData = await tankResponse.json();
+    return { data, error: null };
 };
 
+
+export const fetchTankTsData = async (source_key: string): Promise<Result<TankTsData>> => {
+    const req_tank_ts: RequestPayloadTS = {scada_id: source_key};
+    const ts_response = await fetch('https://tanks-api.wolfeydev.com/tanks_timestamps', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(req_tank_ts)
+    })
+
+    if (!ts_response.ok) {
+        return {data: null, error: new Error(`Network response was not ok: ${ts_response.status} ${ts_response.statusText}`)};
+    }
+
+    const data: TankTsData = await ts_response.json();
+    return {data, error: null};
+}

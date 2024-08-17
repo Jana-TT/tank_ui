@@ -1,58 +1,62 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { fetchFacilityData, fetchTankData } from '../../components/data_fetch';
-import { TankData, FacilityData } from '../../components/interfaces';
-import TankCard from '../../components/tank_card'; 
+import { fetchFacilityData, fetchTanksData } from '../../../components/data_fetch';
+import { TankData, FacilityData } from '../../../components/interfaces';
+import TankCard from '../../../components/tank_card'; 
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography, Grid } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useRouter } from 'next/navigation';
 
 export const DataTransform = () => {
     const [facData, setFacData] = useState<FacilityData | null>(null);
     const [tankData, setTankData] = useState<TankData | null>(null);
     const [error, setError] = useState<Error | null>(null);
-
+    
     const [selectedDivision, setSelectedDivision] = useState<string>('');
     const [selectedForeman, setSelectedForeman] = useState<string>('');
     const [selectedRoute, setSelectedRoute] = useState<string>('');
     const [selectedFacility, setSelectedFacility] = useState<string>('');
 
-    const [propertyId, setpropertyId] = useState<string | null>(null);
+    const [propertyId, setPropertyId] = useState<string | null>(null);    
+    const [selectedScadaID, setSelectedScadaID] = useState<string | null>(null);
+
+    const router = useRouter(); // Initialize the router
 
     useEffect(() => {
-        const fetch_fac_data = async () => {
-            const fac_result = await fetchFacilityData();
-            if (fac_result.error) {
-                setError(fac_result.error);
+        const fetchFacData = async () => {
+            const facResult = await fetchFacilityData();
+            if (facResult.error) {
+                setError(facResult.error);
             } else {
-                setFacData(fac_result.data);
-                const facility = fac_result.data.facilities.find((fac: any) =>
+                setFacData(facResult.data);
+                const facility = facResult.data.facilities.find((fac: any) =>
                     fac.division_name === selectedDivision &&
                     fac.foreman_name === selectedForeman &&
                     fac.route_name === selectedRoute &&
                     fac.facility_name === selectedFacility
                 );
                 if (facility) {
-                    setpropertyId(facility.property_id); 
+                    setPropertyId(facility.property_id); 
                 }
             }
         };
 
-        fetch_fac_data();
+        fetchFacData();
     }, [selectedDivision, selectedForeman, selectedRoute, selectedFacility]);
 
     useEffect(() => {
         if (propertyId) {
-            const fetch_tank_data = async () => {
-                const tank_result = await fetchTankData([propertyId]);
-                if (tank_result.error) {
-                    setError(tank_result.error);
+            const fetchTankData = async () => {
+                const tankResult = await fetchTanksData([propertyId]);
+                if (tankResult.error) {
+                    setError(tankResult.error);
                 } else {
-                    setTankData(tank_result.data);
+                    setTankData(tankResult.data);
                 }
             };
 
-            fetch_tank_data();
+            fetchTankData();
         }
     }, [propertyId]);
 
@@ -73,6 +77,11 @@ export const DataTransform = () => {
 
     const handleBackButton = (setter: React.Dispatch<React.SetStateAction<string>>) => () => {
         setter('');
+    };
+
+    const handleTankCardClick = (scadaID: string) => {
+        setSelectedScadaID(scadaID); 
+        router.push(`/tank/${scadaID}`); // Navigate to the new page
     };
 
     const divisionOptions = extractNames('division_name');
@@ -183,7 +192,7 @@ export const DataTransform = () => {
                     <Grid container spacing={4}>
                         {tankData.tanks.map((tank) => (
                             <Grid item key={`${tank.property_id}-${tank.tank_type}-${tank.tank_number}`}>
-                                <TankCard tank={tank} />
+                                <TankCard tank={tank} onClick={() => handleTankCardClick(tank.scada_id)}/> 
                             </Grid>
                         ))}
                     </Grid>
