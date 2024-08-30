@@ -6,22 +6,21 @@ import { fetchTankTsData } from '../../../../components/data_fetch';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, Title } from 'chart.js';
 import { TankTs, TankTsData } from '../../../../components/interfaces';
-import { ChartOptions, ChartData } from 'chart.js';
+import { ChartOptions, ChartData, ChartDataset } from 'chart.js';
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, Title);
 
-const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tank_type_selected: string | null }> = ({ tankTS, esd_source_key, tank_type_selected }) => {
-    const selectedTankType = tank_type_selected || 'DefaultTankType'; // Handle null case
-
-    // Filter data based on tank_metric and tank_type
+const generateDatasets = (tankTS: TankTs[], selectedTankType: string): ChartDataset<'line', number[]>[] => {
     const levelData = tankTS.find(ts => ts.tank_metric === "Level");
     const volumeData = tankTS.find(ts => ts.tank_metric === "Volume");
     const inchesUntilAlarmData = tankTS.find(ts => ts.tank_metric === "InchesUntilAlarm" && ts.tank_type === selectedTankType);
 
-    // Create datasets based on the filtered data
-    const datasets = [
-        levelData && {
+    // Construct the datasets only if corresponding data exists
+    const datasets: ChartDataset<'line', number[]>[] = [];
+
+    if (levelData) {
+        datasets.push({
             label: 'Level',
             data: levelData.values,
             borderColor: 'rgba(75,192,192,1)',
@@ -32,8 +31,11 @@ const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tan
             pointBackgroundColor: 'rgba(75,192,192,0.4)',
             pointRadius: 5,
             pointHoverRadius: 7,
-        },
-        volumeData && {
+        });
+    }
+
+    if (volumeData) {
+        datasets.push({
             label: 'Volume',
             data: volumeData.values,
             borderColor: 'rgba(153,102,255,1)',
@@ -44,8 +46,11 @@ const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tan
             pointBackgroundColor: 'rgba(153,102,255,0.4)',
             pointRadius: 5,
             pointHoverRadius: 7,
-        },
-        inchesUntilAlarmData && {
+        });
+    }
+
+    if (inchesUntilAlarmData) {
+        datasets.push({
             label: 'InchesUntilAlarm',
             data: inchesUntilAlarmData.values,
             borderColor: 'rgba(255,99,132,1)',
@@ -56,15 +61,22 @@ const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tan
             pointBackgroundColor: 'rgba(255,99,132,0.4)',
             pointRadius: 5,
             pointHoverRadius: 7,
-        },
-    ].filter(Boolean); // Remove any undefined datasets
+        });
+    }
+
+    return datasets;
+};
+
+const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tank_type_selected: string | null }> = ({ tankTS, esd_source_key, tank_type_selected }) => {
+    const selectedTankType = tank_type_selected || 'DefaultTankType'; // Handle null case
 
     const timestamps = tankTS[0]?.timestamps.map(ts => ts.toLocaleString()) || [];
+    const datasets = generateDatasets(tankTS, selectedTankType);
 
     // Type the data object
     const data: ChartData<'line', number[], string> = {
         labels: timestamps,
-        datasets,
+        datasets, // This will always be an array of ChartDataset<'line', number[]>
     };
 
     const options: ChartOptions<'line'> = {
@@ -98,7 +110,7 @@ const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tan
             },
             title: {
                 display: true,
-                text: 'Tank Metrics Over Time', // Add your chart title here
+                text: 'Tank Metrics Over Time',
             },
         },
     };
@@ -109,21 +121,17 @@ const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tan
 const TankPage: React.FC = () => {
     const params = useParams();
     const searchParams = useSearchParams();
-    console.log('Search Params:', searchParams.toString());
 
     const source_key = Array.isArray(params.source_key) ? params.source_key[0] : params.source_key;
     const [tankTSdata, setTankTSdata] = useState<TankTsData | null>(null);
     const [error, setError] = useState<Error | null>(null);
 
     const esd_source_key = searchParams.get('second_sk');
-    console.log("thisis here", esd_source_key);
-
     const tank_type_selected = searchParams.get('tank-type');
 
     useEffect(() => {
         const fetchData = async () => {
             const source_keys = esd_source_key ? [source_key, esd_source_key] : [source_key];
-            console.log('Fetching data with:', source_keys);
             const result = await fetchTankTsData(source_keys);
             if (result.error) {
                 setError(result.error);
@@ -141,7 +149,6 @@ const TankPage: React.FC = () => {
 
     return (
         <div>
-
             <LineChart tankTS={tankTSdata.timeseries} esd_source_key={esd_source_key} tank_type_selected={tank_type_selected} />
         </div>
     );
