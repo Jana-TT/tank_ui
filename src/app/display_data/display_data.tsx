@@ -18,8 +18,9 @@ export const DataTransform = () => {
     const [selectedRoute, setSelectedRoute] = useState<string>('');
     const [selectedFacility, setSelectedFacility] = useState<string>('');
 
-    const [propertyId, setPropertyId] = useState<string | null>(null);    
-    const [selectedScadaID, setSelectedScadaID] = useState<string | null>(null);
+    const [propertyId, setPropertyId] = useState<string[]>([]);    
+    const [selectedScadID, setSelectedScadaID] = useState<string | null>(null);
+    const [second_sk, setSecondSK] = useState<string>('');
 
     const router = useRouter(); // Initialize the router
 
@@ -30,15 +31,15 @@ export const DataTransform = () => {
                 setError(facResult.error);
             } else {
                 setFacData(facResult.data);
-                const facility = facResult.data.facilities.find((fac: any) =>
-                    fac.division_name === selectedDivision &&
-                    fac.foreman_name === selectedForeman &&
-                    fac.route_name === selectedRoute &&
-                    fac.facility_name === selectedFacility
+                const matchingFacilities = facResult.data.facilities.filter((fac: any) =>
+                    (!selectedDivision || fac.division_name === selectedDivision) &&
+                    (!selectedForeman || fac.foreman_name === selectedForeman) &&
+                    (!selectedRoute || fac.route_name === selectedRoute) &&
+                    (!selectedFacility || fac.facility_name === selectedFacility)
                 );
-                if (facility) {
-                    setPropertyId(facility.property_id); 
-                }
+    
+                const propertyIds = matchingFacilities.map((facility: any) => facility.property_id);
+                setPropertyId(propertyIds);
             }
         };
 
@@ -46,9 +47,9 @@ export const DataTransform = () => {
     }, [selectedDivision, selectedForeman, selectedRoute, selectedFacility]);
 
     useEffect(() => {
-        if (propertyId) {
+        if (propertyId.length > 0) {
             const fetchTankData = async () => {
-                const tankResult = await fetchTanksData([propertyId]);
+                const tankResult = await fetchTanksData(propertyId);
                 if (tankResult.error) {
                     setError(tankResult.error);
                 } else {
@@ -79,10 +80,24 @@ export const DataTransform = () => {
         setter('');
     };
 
-    const handleTankCardClick = (scadaID: string) => {
-        setSelectedScadaID(scadaID); 
-        router.push(`/tank/${scadaID}`); // Navigate to the new page
+    const handleTankCardClick = (source_key: string, inchestoesd: number | null) => {
+        const isEsd = inchestoesd !== null;
+        const esdQuery = isEsd ? '?is-esd=true' : '';
+        const tank_type = source_key.charAt(5);
+        const tankTypeQuery = `?tank-type=${tank_type === '0' ? 'Oil' : 'Water'}`;
+        
+        let second_sk = '';
+        if (isEsd) {
+            second_sk = source_key.slice(0, 5) + "FAC";
+        }
+
+        const finalUrl = isEsd 
+            ? `/tank/${source_key}${tankTypeQuery}&${esdQuery}&second_sk=${second_sk}` 
+            : `/tank/${source_key}${tankTypeQuery}&${esdQuery}`;
+        
+        router.push(finalUrl);
     };
+
 
     const divisionOptions = extractNames('division_name');
     const foremanOptions = extractNames('foreman_name', { division_name: selectedDivision });
@@ -187,17 +202,18 @@ export const DataTransform = () => {
                 )}
             </Box>
 
-            <Box sx={{ marginTop: '20px', marginLeft:'65px' }}>
-                {tankData && tankData.tanks.length > 0 ? (
-                    <Grid container spacing={4}>
-                        {tankData.tanks.map((tank) => (
-                            <Grid item key={`${tank.property_id}-${tank.tank_type}-${tank.tank_number}`}>
-                                <TankCard tank={tank} onClick={() => handleTankCardClick(tank.scada_id)}/> 
+            <Box sx={{ marginTop: '20px', marginLeft: '65px' }}>
+                {(selectedDivision || selectedForeman || selectedRoute) && tankData && tankData.tanks.length > 0 ? (
+                    <Grid container spacing={2} justifyContent="center">
+                        {tankData.tanks.map((tank, index) => (
+                            <Grid item key={index} xs={12} sm={6} md={4}>
+                                <div>{tank.property_id}</div>
+                                <TankCard tank={tank} onClick={() => handleTankCardClick(tank.source_key, tank.inches_to_esd)} />
                             </Grid>
                         ))}
                     </Grid>
                 ) : (
-                    <Typography variant="h6" sx={{ color: 'white' }}>Loading...</Typography>
+                    <Typography variant="h6" sx={{ color: 'white' }}>Begin by selecting division to view tanks.</Typography>
                 )}
             </Box>
         </Box>

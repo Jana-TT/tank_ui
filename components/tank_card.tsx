@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -16,21 +16,24 @@ const TankCard: React.FC<TankCardProps> = ({tank, onClick}) => {
 
     return (
         <div>
-            <Card onClick={onClick} sx={{marginBottom: 2, backgroundColor: '#191919', width: '200px', overflow: 'hidden', height: '130px', boxShadow:'0px 8px 8px rgba(0, 0, 0, 0.1)', cursor: 'pointer'}}>
-                <CardContent sx={{padding: '15px', height: '100%'}}>
+            <Card onClick={onClick} sx={{marginBottom: '1rem', backgroundColor: '#191919', width: '100%', maxWidth: '300px', overflow: 'hidden', height: 'auto', boxShadow:'0px 8px 8px rgba(0, 0, 0, 0.1)', cursor: 'pointer'}}>
+                <CardContent sx={{padding: '1rem', height: '100%'}}>
                     <Box sx={{display: 'flex', alignItems: 'flex-start', height: '100%'}}>
-                        <Box sx={{ width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+                        <Box sx={{ flex: '0 0 auto', width: '20%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
                             <Typography sx={{ color: 'white'}}>{percent_full_tank(tank.percent_full, tank.tank_type, tank.capacity)}</Typography>
                         </Box>
-                        <Box sx={{marginTop: 1, marginLeft: 1}}>
-                            <Typography sx={{fontSize: '0.95rem', textAlign: 'left', color: tank.tank_type == "Oil" ? '#5bb450' : '#33c7d8', fontWeight: 'bold'}}>{tank.tank_type} Tank #{tank.tank_number}</Typography>
+                        <Box sx={{marginTop: '0.5rem', marginLeft: '0.5rem', flex: '1'}}>
+                            <Typography sx={{fontSize: '0.95rem', textAlign: 'left', color: tank.tank_type == "Oil" ? '#5bb450' : '#33c7d8', fontWeight: 'bold'}}>
+                                {tank.tank_type} Tank #{tank.tank_number}
+                            </Typography>
                             <Typography sx={{fontSize: '0.95rem', color: 'white', textAlign: 'left'}}>Level: {convertToFeet(tank.level)}</Typography>
-                            <Typography sx={{fontSize: '0.95rem', color: 'white', textAlign: 'left', marginBottom: 0.3}}>Capacity: {tank.capacity} bbl</Typography>
+                            <Typography sx={{fontSize: '0.95rem', color: 'white', textAlign: 'left', marginBottom: '0.3rem'}}>Capacity: {tank.capacity} bbl</Typography>
                             <Box sx={{background:'#6495ED', width: 'fit-content', borderRadius: '2px'}}>
-                                {tank.inches_to_esd !== null && (<Typography sx={{fontSize: '0.95rem', color: 'white', textAlign: 'left', marginRight: 0.5, marginLeft: 0.5}}>{convertToFeet(tank.inches_to_esd)} to ESD</Typography>)} 
-                            </Box>
-                            <Box sx={{ width: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
-                                <Typography sx={{ color: 'white'}}>{tank.scada_id}</Typography>
+                                {tank.inches_to_esd !== null && (
+                                    <Typography sx={{fontSize: '0.95rem', color: 'white', textAlign: 'left', padding: '0.2rem 0.5rem'}}>
+                                        {convertToFeet(tank.inches_to_esd)} to ESD 
+                                    </Typography>
+                                )}
                             </Box>
                         </Box>
                     </Box>
@@ -41,4 +44,3 @@ const TankCard: React.FC<TankCardProps> = ({tank, onClick}) => {
 }
 
 export default TankCard;
-

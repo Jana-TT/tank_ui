@@ -1,6 +1,7 @@
 export type Tank = {
+    identifier: string | null;
     property_id: string;
-    scada_id: string;
+    source_key: string;
     tank_type: string;
     tank_number: number;
     level: number;
@@ -35,6 +36,7 @@ export type RequestPayload = {
 
 export type TankTs = {
     tank_metric: string;
+    tank_type: string;
     uom: string;
     timestamps: Date[];
     values: number[];
@@ -45,5 +47,5 @@ export type TankTsData = {
 }
 
 export type RequestPayloadTS = {
-    scada_id: string
+    source_key: string[];
 }

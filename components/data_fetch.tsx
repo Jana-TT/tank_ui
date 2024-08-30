@@ -34,8 +34,8 @@ export const fetchTanksData = async (propertyIds: string[]): Promise<Result<Tank
 };
 
 
-export const fetchTankTsData = async (source_key: string): Promise<Result<TankTsData>> => {
-    const req_tank_ts: RequestPayloadTS = {scada_id: source_key};
+export const fetchTankTsData = async (sourceKeys: string[]): Promise<Result<TankTsData>> => {
+    const req_tank_ts: RequestPayloadTS = {source_key: sourceKeys};
     const ts_response = await fetch('https://tanks-api.wolfeydev.com/tanks_timestamps', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
