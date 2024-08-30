@@ -80,7 +80,7 @@ const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string, tank_type_
         plugins: {
             tooltip: {
                 callbacks: {
-                    label: function (tooltipItem) {
+                    label: function (tooltipItem: { dataset: { label: any; }; raw: number; }) {
                         return `${tooltipItem.dataset.label}: ${tooltipItem.raw.toFixed(2)}`;
                     },
                 },
