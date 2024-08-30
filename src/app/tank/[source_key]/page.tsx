@@ -7,8 +7,10 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, Title } from 'chart.js';
 import { TankTs, TankTsData } from '../../../../components/interfaces';
 import { ChartOptions, ChartData, ChartDataset } from 'chart.js';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Link from 'next/link';
 
-// Register Chart.js components
+// Registering the Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, Title);
 
 const generateDatasets = (tankTS: TankTs[], selectedTankType: string): ChartDataset<'line', number[]>[] => {
@@ -16,7 +18,7 @@ const generateDatasets = (tankTS: TankTs[], selectedTankType: string): ChartData
     const volumeData = tankTS.find(ts => ts.tank_metric === "Volume");
     const inchesUntilAlarmData = tankTS.find(ts => ts.tank_metric === "InchesUntilAlarm" && ts.tank_type === selectedTankType);
 
-    // Construct the datasets only if corresponding data exists
+    // make the datasets only if corresponding data exists
     const datasets: ChartDataset<'line', number[]>[] = [];
 
     if (levelData) {
@@ -51,7 +53,7 @@ const generateDatasets = (tankTS: TankTs[], selectedTankType: string): ChartData
 
     if (inchesUntilAlarmData) {
         datasets.push({
-            label: 'InchesUntilAlarm',
+            label: 'Inches Until ESD',
             data: inchesUntilAlarmData.values,
             borderColor: 'rgba(255,99,132,1)',
             backgroundColor: 'rgba(255,99,132,0.4)',
@@ -67,19 +69,22 @@ const generateDatasets = (tankTS: TankTs[], selectedTankType: string): ChartData
     return datasets;
 };
 
-const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tank_type_selected: string | null }> = ({ tankTS, esd_source_key, tank_type_selected }) => {
+const LineChart: React.FC<{ tankTS: TankTs[], tank_type_selected: string | null }> = ({ tankTS, tank_type_selected }) => {
     const selectedTankType = tank_type_selected || 'DefaultTankType'; // Handle null case
 
-    const timestamps = tankTS[0]?.timestamps.map(ts => ts.toLocaleString()) || [];
+    // Converting timestamps to local strings
+    const timestamps = tankTS[0]?.timestamps.map(ts => new Date(ts).toLocaleString()) || [];
     const datasets = generateDatasets(tankTS, selectedTankType);
 
-    // Type the data object
+    // Type the data object so i dont get typescript errors
     const data: ChartData<'line', number[], string> = {
         labels: timestamps,
         datasets, // This will always be an array of ChartDataset<'line', number[]>
     };
 
     const options: ChartOptions<'line'> = {
+        responsive: true, 
+        maintainAspectRatio: true,
         scales: {
             x: {
                 title: {
@@ -100,7 +105,13 @@ const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tan
                 callbacks: {
                     label: (tooltipItem) => {
                         const value = tooltipItem.raw as number;
-                        return `${tooltipItem.dataset.label}: ${value.toFixed(2)}`;
+                        const units = {
+                            'Level': 'in',
+                            'Volume': 'bbl',
+                            'Inches Until ESD': 'in'
+                        };
+                        const unit = units[tooltipItem.dataset.label as keyof typeof units] || 'unit';
+                        return `${tooltipItem.dataset.label}: ${value.toFixed(2)} ${unit}`;
                     },
                 },
             },
@@ -110,7 +121,7 @@ const LineChart: React.FC<{ tankTS: TankTs[], esd_source_key: string | null, tan
             },
             title: {
                 display: true,
-                text: 'Tank Metrics Over Time',
+                text: 'Tank Metrics Over Time ',
             },
         },
     };
@@ -148,8 +159,13 @@ const TankPage: React.FC = () => {
     if (!tankTSdata || tankTSdata.timeseries.length < 2) return <p>Loading...</p>;
 
     return (
-        <div>
-            <LineChart tankTS={tankTSdata.timeseries} esd_source_key={esd_source_key} tank_type_selected={tank_type_selected} />
+        <div style={{ position: 'fixed', height: '100vh', width: '100vw' }}>
+            <Link href="/">
+                <ArrowBackIcon sx={{ position: 'absolute', left: '16px', cursor: 'pointer' }} />
+            </Link>
+            <div style={{ height: 'calc(100% - 32px)', width: '100%', maxWidth: '100%', marginTop: '32px' }}>
+                <LineChart tankTS={tankTSdata.timeseries} tank_type_selected={tank_type_selected} />
+            </div>
         </div>
     );
 };

@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { fetchFacilityData, fetchTanksData } from '../../../components/data_fetch';
 import { TankData, FacilityData } from '../../../components/interfaces';
-import TankCard from '../../../components/tank_card'; 
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography, Grid } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter } from 'next/navigation';
+
+const TankCard = lazy(() => import('../../../components/tank_card'));
 
 export const DataTransform = () => {
     const [facData, setFacData] = useState<FacilityData | null>(null);
@@ -21,6 +22,7 @@ export const DataTransform = () => {
     const [propertyId, setPropertyId] = useState<string[]>([]);    
     const [selectedScadID, setSelectedScadaID] = useState<string | null>(null);
     const [second_sk, setSecondSK] = useState<string>('');
+  
 
     const router = useRouter(); // Initialize the router
 
