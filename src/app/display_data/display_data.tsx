@@ -6,6 +6,7 @@ import { TankData, FacilityData } from '../../../components/interfaces';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography, Grid } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter, useSearchParams } from 'next/navigation';
+import SuspenseBoundary from '../../../components/suspense_boundary';
 
 const TankCard = lazy(() => import('../../../components/tank_card'));
 
@@ -152,118 +153,122 @@ export const DataTransform = () => {
     });
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', marginBottom: '20px', backgroundColor:'#282b30', width:'100%', paddingTop:'6px', paddingLeft:'10px', paddingBottom:'2px', boxShadow:'0px 10px 8px rgba(0, 0, 0, 0.1)' }}>
-                
-                {/* Division Selection */}
-                {selectedForeman || selectedRoute ? null : (
-                    <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
-                        {selectedDivision ? (
-                            <>
-                                <ArrowBackIcon onClick={handleBackButton(setSelectedDivision, 'division')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                <Typography sx={{ fontSize: '12px' }}>{selectedDivision}</Typography>
-                            </>
-                        ) : (
+        <SuspenseBoundary>
+            <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', marginBottom: '20px', backgroundColor:'#282b30', width:'100%', paddingTop:'6px', paddingLeft:'10px', paddingBottom:'2px', boxShadow:'0px 10px 8px rgba(0, 0, 0, 0.1)' }}>
+                    
+                    {/* Division Selection */}
+                    {selectedForeman || selectedRoute ? null : (
+                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
+                            {selectedDivision ? (
+                                <>
+                                    <ArrowBackIcon onClick={handleBackButton(setSelectedDivision, 'division')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
+                                    <Typography sx={{ fontSize: '12px' }}>{selectedDivision}</Typography>
+                                </>
+                            ) : (
+                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Division name</InputLabel>
+                                    <Select
+                                        value={selectedDivision}
+                                        onChange={handleChange(setSelectedDivision, 'division')}
+                                        sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
+                                    >
+                                        {divisionOptions.map((name, index) => (
+                                            <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        </Box>
+                    )}
+
+                    {/* Foreman Selection */}
+                    {selectedRoute ? null : (
+                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
+                            {selectedForeman ? (
+                                <>
+                                    <ArrowBackIcon onClick={handleBackButton(setSelectedForeman, 'foreman')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
+                                    <Typography sx={{ fontSize: '12px' }}>{selectedForeman}</Typography>
+                                </>
+                            ) : (
+                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Foreman name</InputLabel>
+                                    <Select
+                                        value={selectedForeman}
+                                        onChange={handleChange(setSelectedForeman, 'foreman')}
+                                        sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
+                                    >
+                                        {foremanOptions.map((name, index) => (
+                                            <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        </Box>
+                    )}
+
+                    {/* Route Selection */}
+                    {selectedDivision && selectedForeman && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
+                            {selectedRoute ? (
+                                <>
+                                    <ArrowBackIcon onClick={handleBackButton(setSelectedRoute, 'route')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
+                                    <Typography variant="body1" sx={{ fontSize: '12px' }}>{selectedRoute}</Typography>
+                                </>
+                            ) : (
+                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Route name</InputLabel>
+                                    <Select
+                                        value={selectedRoute}
+                                        onChange={handleChange(setSelectedRoute, 'route')}
+                                        sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
+                                    >
+                                        {routeOptions.map((name, index) => (
+                                            <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        </Box>
+                    )}
+
+                    {/* Facility Selection */}
+                    {selectedRoute && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
                             <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
-                                <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Division name</InputLabel>
+                                <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Facility name</InputLabel>
                                 <Select
-                                    value={selectedDivision}
-                                    onChange={handleChange(setSelectedDivision, 'division')}
+                                    value={selectedFacility}
+                                    onChange={handleChange(setSelectedFacility, 'facility')}
                                     sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
                                 >
-                                    {divisionOptions.map((name, index) => (
+                                    {facilityOptions.map((name, index) => (
                                         <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-                        )}
-                    </Box>
-                )}
+                        </Box>
+                    )}
+                </Box>
 
-                {/* Foreman Selection */}
-                {selectedRoute ? null : (
-                    <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
-                        {selectedForeman ? (
-                            <>
-                                <ArrowBackIcon onClick={handleBackButton(setSelectedForeman, 'foreman')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                <Typography sx={{ fontSize: '12px' }}>{selectedForeman}</Typography>
-                            </>
-                        ) : (
-                            <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
-                                <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Foreman name</InputLabel>
-                                <Select
-                                    value={selectedForeman}
-                                    onChange={handleChange(setSelectedForeman, 'foreman')}
-                                    sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
-                                >
-                                    {foremanOptions.map((name, index) => (
-                                        <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        )}
-                    </Box>
-                )}
-
-                {/* Route Selection */}
-                {selectedDivision && selectedForeman && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
-                        {selectedRoute ? (
-                            <>
-                                <ArrowBackIcon onClick={handleBackButton(setSelectedRoute, 'route')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                <Typography variant="body1" sx={{ fontSize: '12px' }}>{selectedRoute}</Typography>
-                            </>
-                        ) : (
-                            <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
-                                <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Route name</InputLabel>
-                                <Select
-                                    value={selectedRoute}
-                                    onChange={handleChange(setSelectedRoute, 'route')}
-                                    sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
-                                >
-                                    {routeOptions.map((name, index) => (
-                                        <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        )}
-                    </Box>
-                )}
-
-                {/* Facility Selection */}
-                {selectedRoute && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
-                        <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
-                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Facility name</InputLabel>
-                            <Select
-                                value={selectedFacility}
-                                onChange={handleChange(setSelectedFacility, 'facility')}
-                                sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
-                            >
-                                {facilityOptions.map((name, index) => (
-                                    <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                )}
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '65px' }}>
+                    {(selectedDivision || selectedForeman || selectedRoute) && tankData && tankData.tanks.length > 0 ? (
+                        <Grid container spacing={2} sx={{ flexWrap: 'wrap' }}>
+                            {tankData && filteredTankData?.map((tank, index) => (
+                                <Grid item key={index} xs={12} sm={6} md={4}>
+                                    <div>{tank.property_id}</div>
+                                    <Suspense fallback={<div>Loading...</div>}>
+                                        <TankCard tank={tank} onClick={() => handleTankCardClick(tank.source_key, tank.inches_to_esd)} />
+                                    </Suspense>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    ) : (
+                        <Typography variant="h6" sx={{ color: 'white' }}>Begin by selecting division to view tanks.</Typography>
+                    )}
+                </Box>
             </Box>
-
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '65px' }}>
-                {(selectedDivision || selectedForeman || selectedRoute) && tankData && tankData.tanks.length > 0 ? (
-                    <Grid container spacing={2} sx={{ flexWrap: 'wrap' }}>
-                        {tankData && filteredTankData?.map((tank, index) => (
-                            <Grid item key={index} xs={12} sm={6} md={4}>
-                                <div>{tank.property_id}</div>
-                                <TankCard tank={tank} onClick={() => handleTankCardClick(tank.source_key, tank.inches_to_esd)} />
-                            </Grid>
-                        ))}
-                    </Grid>
-                ) : (
-                    <Typography variant="h6" sx={{ color: 'white' }}>Begin by selecting division to view tanks.</Typography>
-                )}
-            </Box>
-        </Box>
+        </SuspenseBoundary>
     );
 };
 
