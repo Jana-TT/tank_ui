@@ -140,6 +140,8 @@ const TankPage: React.FC = () => {
     const esd_source_key = searchParams.get('second_sk');
     const tank_type_selected = searchParams.get('tank-type');
 
+    const returnUrl = searchParams.get('returnUrl') || '/';
+
     useEffect(() => {
         const fetchData = async () => {
             const source_keys = esd_source_key ? [source_key, esd_source_key] : [source_key];
@@ -160,7 +162,7 @@ const TankPage: React.FC = () => {
 
     return (
         <div style={{ position: 'fixed', height: '100vh', width: '100vw' }}>
-            <Link href="/">
+            <Link href={returnUrl}>
                 <ArrowBackIcon sx={{ position: 'absolute', left: '16px', cursor: 'pointer' }} />
             </Link>
             <div style={{ height: 'calc(100% - 32px)', width: '100%', maxWidth: '100%', marginTop: '32px' }}>

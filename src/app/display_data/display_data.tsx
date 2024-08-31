@@ -5,7 +5,7 @@ import { fetchFacilityData, fetchTanksData } from '../../../components/data_fetc
 import { TankData, FacilityData } from '../../../components/interfaces';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography, Grid } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const TankCard = lazy(() => import('../../../components/tank_card'));
 
@@ -25,6 +25,7 @@ export const DataTransform = () => {
   
 
     const router = useRouter(); // Initialize the router
+    const searchParams = useSearchParams();
 
     useEffect(() => {
         const fetchFacData = async () => {
@@ -74,13 +75,46 @@ export const DataTransform = () => {
         return Array.from(uniqueNames);
     };
 
-    const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (event: SelectChangeEvent<string>) => {
-        setter(event.target.value as string);
+    useEffect(() => {
+        const division = searchParams.get('division') || '';
+        const foreman = searchParams.get('foreman') || '';
+        const route = searchParams.get('route') || '';
+        const facility = searchParams.get('facility') || '';
+
+        setSelectedDivision(division);
+        setSelectedForeman(foreman);
+        setSelectedRoute(route);
+        setSelectedFacility(facility);
+    }, [searchParams]);
+
+    const updateUrlWithSelections = (params: Record<string, string>) => {
+        const query = new URLSearchParams(params).toString();
+        router.push(`?${query}`);
     };
 
-    const handleBackButton = (setter: React.Dispatch<React.SetStateAction<string>>) => () => {
-        setter('');
+    const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>, key: string) => (event: SelectChangeEvent<string>) => {
+        const value = event.target.value as string;
+        setter(value);
+        const newParams = {
+            division: key === 'division' ? value : selectedDivision,
+            foreman: key === 'foreman' ? value : selectedForeman,
+            route: key === 'route' ? value : selectedRoute,
+            facility: key === 'facility' ? value : selectedFacility,
+        };
+        updateUrlWithSelections(newParams);
     };
+
+    const handleBackButton = (setter: React.Dispatch<React.SetStateAction<string>>, key: string) => () => {
+        setter('');
+        const newParams = {
+            division: key === 'division' ? '' : selectedDivision,
+            foreman: key === 'foreman' ? '' : selectedForeman,
+            route: key === 'route' ? '' : '', // Reset route filter
+            facility: key === 'route' ? '' : '', // Reset facility filter
+        };
+        updateUrlWithSelections(newParams);
+    };
+    
 
     const handleTankCardClick = (source_key: string, inchestoesd: number | null) => {
         const isEsd = inchestoesd !== null;
@@ -93,9 +127,10 @@ export const DataTransform = () => {
             second_sk = source_key.slice(0, 5) + "FAC";
         }
 
+        const currentUrl = window.location.href;
         const finalUrl = isEsd 
-            ? `/tank/${source_key}${tankTypeQuery}&${esdQuery}&second_sk=${second_sk}` 
-            : `/tank/${source_key}${tankTypeQuery}&${esdQuery}`;
+            ? `/tank/${source_key}${tankTypeQuery}&${esdQuery}&second_sk=${second_sk}&returnUrl=${encodeURIComponent(currentUrl)}` 
+            : `/tank/${source_key}${tankTypeQuery}&${esdQuery}&returnUrl=${encodeURIComponent(currentUrl)}`;
         
         router.push(finalUrl);
     };
@@ -106,6 +141,16 @@ export const DataTransform = () => {
     const routeOptions = extractNames('route_name', { division_name: selectedDivision, foreman_name: selectedForeman });
     const facilityOptions = extractNames('facility_name', { division_name: selectedDivision, foreman_name: selectedForeman, route_name: selectedRoute });
 
+    const filteredTankData = tankData?.tanks.filter((tank) => {
+        const facility = facData?.facilities.find(fac => fac.property_id === tank.property_id);
+        return (
+            (!selectedDivision || facility?.division_name === selectedDivision) &&
+            (!selectedForeman || facility?.foreman_name === selectedForeman) &&
+            (!selectedRoute || facility?.route_name === selectedRoute) &&
+            (!selectedFacility || facility?.facility_name === selectedFacility)
+        );
+    });
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', marginBottom: '20px', backgroundColor:'#282b30', width:'100%', paddingTop:'6px', paddingLeft:'10px', paddingBottom:'2px', boxShadow:'0px 10px 8px rgba(0, 0, 0, 0.1)' }}>
@@ -115,7 +160,7 @@ export const DataTransform = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
                         {selectedDivision ? (
                             <>
-                                <ArrowBackIcon onClick={handleBackButton(setSelectedDivision)} sx={{ cursor: 'pointer', marginRight: '8px' }} />
+                                <ArrowBackIcon onClick={handleBackButton(setSelectedDivision, 'division')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
                                 <Typography sx={{ fontSize: '12px' }}>{selectedDivision}</Typography>
                             </>
                         ) : (
@@ -123,7 +168,7 @@ export const DataTransform = () => {
                                 <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Division name</InputLabel>
                                 <Select
                                     value={selectedDivision}
-                                    onChange={handleChange(setSelectedDivision)}
+                                    onChange={handleChange(setSelectedDivision, 'division')}
                                     sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
                                 >
                                     {divisionOptions.map((name, index) => (
@@ -140,7 +185,7 @@ export const DataTransform = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
                         {selectedForeman ? (
                             <>
-                                <ArrowBackIcon onClick={handleBackButton(setSelectedForeman)} sx={{ cursor: 'pointer', marginRight: '8px' }} />
+                                <ArrowBackIcon onClick={handleBackButton(setSelectedForeman, 'foreman')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
                                 <Typography sx={{ fontSize: '12px' }}>{selectedForeman}</Typography>
                             </>
                         ) : (
@@ -148,7 +193,7 @@ export const DataTransform = () => {
                                 <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Foreman name</InputLabel>
                                 <Select
                                     value={selectedForeman}
-                                    onChange={handleChange(setSelectedForeman)}
+                                    onChange={handleChange(setSelectedForeman, 'foreman')}
                                     sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
                                 >
                                     {foremanOptions.map((name, index) => (
@@ -165,7 +210,7 @@ export const DataTransform = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
                         {selectedRoute ? (
                             <>
-                                <ArrowBackIcon onClick={handleBackButton(setSelectedRoute)} sx={{ cursor: 'pointer', marginRight: '8px' }} />
+                                <ArrowBackIcon onClick={handleBackButton(setSelectedRoute, 'route')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
                                 <Typography variant="body1" sx={{ fontSize: '12px' }}>{selectedRoute}</Typography>
                             </>
                         ) : (
@@ -173,7 +218,7 @@ export const DataTransform = () => {
                                 <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Route name</InputLabel>
                                 <Select
                                     value={selectedRoute}
-                                    onChange={handleChange(setSelectedRoute)}
+                                    onChange={handleChange(setSelectedRoute, 'route')}
                                     sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
                                 >
                                     {routeOptions.map((name, index) => (
@@ -192,7 +237,7 @@ export const DataTransform = () => {
                             <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Facility name</InputLabel>
                             <Select
                                 value={selectedFacility}
-                                onChange={handleChange(setSelectedFacility)}
+                                onChange={handleChange(setSelectedFacility, 'facility')}
                                 sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
                             >
                                 {facilityOptions.map((name, index) => (
@@ -204,10 +249,10 @@ export const DataTransform = () => {
                 )}
             </Box>
 
-            <Box sx={{ marginTop: '20px', marginLeft: '65px' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '65px' }}>
                 {(selectedDivision || selectedForeman || selectedRoute) && tankData && tankData.tanks.length > 0 ? (
-                    <Grid container spacing={2} justifyContent="center">
-                        {tankData.tanks.map((tank, index) => (
+                    <Grid container spacing={2} sx={{ flexWrap: 'wrap' }}>
+                        {tankData && filteredTankData?.map((tank, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4}>
                                 <div>{tank.property_id}</div>
                                 <TankCard tank={tank} onClick={() => handleTankCardClick(tank.source_key, tank.inches_to_esd)} />
