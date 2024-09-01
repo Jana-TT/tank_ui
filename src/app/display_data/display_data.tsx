@@ -152,6 +152,20 @@ export const DataTransform = () => {
         );
     });
 
+    const groupTanksByFacility = (tanks: TankData['tanks']) => {
+        return tanks.reduce((grouped: Record<string, typeof tanks>, tank) => { //add more stuff
+            const facility = facData?.facilities.find(fac => fac.property_id === tank.property_id); 
+            const facilityName = facility?.facility_name!; // the ! meaning that the data i have will never be undefined
+            if (!grouped[facilityName]) {
+                grouped[facilityName] = [];
+            }
+            grouped[facilityName].push(tank);
+            return grouped;
+        }, {});
+    };
+
+    const groupedTanks = filteredTankData ? groupTanksByFacility(filteredTankData) : {};
+
     return (
         <SuspenseBoundary>
             <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -253,18 +267,24 @@ export const DataTransform = () => {
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '65px' }}>
                     {(selectedDivision || selectedForeman || selectedRoute) && tankData && tankData.tanks.length > 0 ? (
-                        <Grid container spacing={2} sx={{ flexWrap: 'wrap' }}>
-                            {tankData && filteredTankData?.map((tank, index) => (
-                                <Grid item key={index} xs={12} sm={6} md={4}>
-                                    <div>{tank.property_id}</div>
-                                    <Suspense fallback={<div>Loading...</div>}>
-                                        <TankCard tank={tank} onClick={() => handleTankCardClick(tank.source_key, tank.inches_to_esd)} />
-                                    </Suspense>
-                                </Grid>
-                            ))}
-                        </Grid>
+                        Object.entries(groupedTanks).map(([facilityName, tanks], facilityIndex) => (
+                            <Box key={facilityIndex} sx={{ marginBottom: '20px' }}>
+                                <Typography variant="h6" sx={{ color: 'white', marginBottom: '10px' }}>
+                                    {facilityName}
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>
+                                    {tanks.map((tank, index) => (
+                                        <Box key={index} sx={{ width: '100%', maxWidth: '300px' }}>
+                                            <Suspense fallback={<div>Loading...</div>}>
+                                                <TankCard tank={tank} onClick={() => handleTankCardClick(tank.source_key, tank.inches_to_esd)} />
+                                            </Suspense>
+                                        </Box>
+                                    ))}
+                                </Box>
+                            </Box>
+                        ))
                     ) : (
-                        <Typography variant="h6" sx={{ color: 'white' }}>Begin by selecting division to view tanks.</Typography>
+                        <Typography variant="h6" sx={{ color: 'white' }}>Begin by selecting a division to view tanks.</Typography>
                     )}
                 </Box>
             </Box>
