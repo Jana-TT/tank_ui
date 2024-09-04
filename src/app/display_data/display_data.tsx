@@ -4,13 +4,15 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { fetchFacilityData, fetchTanksData } from '../../../components/data_fetch';
 import { TankData, FacilityData } from '../../../components/interfaces';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography, Grid } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter, useSearchParams } from 'next/navigation';
 import SuspenseBoundary from '../../../components/suspense_boundary';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowNavigator from '../../../components/arrow_navigator';
 
 const TankCard = lazy(() => import('../../../components/tank_card'));
 
-export const DataTransform = () => {
+export const DataTransform: React.FC = () => {
     const [facData, setFacData] = useState<FacilityData | null>(null);
     const [tankData, setTankData] = useState<TankData | null>(null);
     const [error, setError] = useState<Error | null>(null);
@@ -24,7 +26,6 @@ export const DataTransform = () => {
     const [selectedScadID, setSelectedScadaID] = useState<string | null>(null);
     const [second_sk, setSecondSK] = useState<string>('');
   
-
     const router = useRouter(); // Initialize the router
     const searchParams = useSearchParams();
 
@@ -110,8 +111,36 @@ export const DataTransform = () => {
         const newParams = {
             division: key === 'division' ? '' : selectedDivision,
             foreman: key === 'foreman' ? '' : selectedForeman,
-            route: key === 'route' ? '' : '', // Reset route filter
-            facility: key === 'route' ? '' : '', // Reset facility filter
+            route: key === 'route' ? '' : selectedRoute,
+            facility: key === 'facility' ? '' : selectedFacility,
+        };
+        updateUrlWithSelections(newParams);
+    };
+
+    const handleArrowClick = (setter: React.Dispatch<React.SetStateAction<string>>, key: string, options: string[], direction: 'left' | 'right') => () => {
+        const currentValue = key === 'division' ? selectedDivision
+                                : key === 'foreman' ? selectedForeman
+                                : key === 'route' ? selectedRoute
+                                : key === 'facility' ? selectedFacility
+                                : '';
+                                
+        const currentIndex = options.indexOf(currentValue);
+        let newIndex = direction === 'left' ? currentIndex - 1 : currentIndex + 1;
+    
+        // Wrap around the index if it goes out of bounds
+        if (newIndex < 0) {
+            newIndex = options.length - 1;
+        } else if (newIndex >= options.length) {
+            newIndex = 0;
+        }
+    
+        const newValue = options[newIndex];
+        setter(newValue);
+        const newParams = {
+            division: key === 'division' ? newValue : selectedDivision,
+            foreman: key === 'foreman' ? newValue : selectedForeman,
+            route: key === 'route' ? newValue : selectedRoute,
+            facility: key === 'facility' ? newValue : selectedFacility,
         };
         updateUrlWithSelections(newParams);
     };
@@ -136,7 +165,6 @@ export const DataTransform = () => {
         router.push(finalUrl);
     };
 
-
     const divisionOptions = extractNames('division_name');
     const foremanOptions = extractNames('foreman_name', { division_name: selectedDivision });
     const routeOptions = extractNames('route_name', { division_name: selectedDivision, foreman_name: selectedForeman });
@@ -153,9 +181,9 @@ export const DataTransform = () => {
     });
 
     const groupTanksByFacility = (tanks: TankData['tanks']) => {
-        return tanks.reduce((grouped: Record<string, typeof tanks>, tank) => { //add more stuff
+        return tanks.reduce((grouped: Record<string, typeof tanks>, tank) => {
             const facility = facData?.facilities.find(fac => fac.property_id === tank.property_id); 
-            const facilityName = facility?.facility_name!; // the ! meaning that the data i have will never be undefined
+            const facilityName = facility?.facility_name!; 
             if (!grouped[facilityName]) {
                 grouped[facilityName] = [];
             }
@@ -171,16 +199,23 @@ export const DataTransform = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', marginBottom: '20px', backgroundColor:'#282b30', width:'100%', paddingTop:'6px', paddingLeft:'10px', paddingBottom:'2px', boxShadow:'0px 10px 8px rgba(0, 0, 0, 0.1)' }}>
                     
-                    {/* Division Selection */}
+                    {/* Division Level */}
                     {selectedForeman || selectedRoute ? null : (
                         <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
                             {selectedDivision ? (
                                 <>
                                     <ArrowBackIcon onClick={handleBackButton(setSelectedDivision, 'division')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                    <Typography sx={{ fontSize: '12px' }}>{selectedDivision}</Typography>
+                                    <Typography sx={{ fontSize: '12px' }}>ALL</Typography>
+                                    <ArrowNavigator
+                                        labelChoice='Division name'
+                                        options={divisionOptions}
+                                        selectedOption={selectedDivision}
+                                        onChange={handleChange(setSelectedDivision, 'division')}
+                                        onArrowClick={handleArrowClick(setSelectedDivision, 'division', divisionOptions, 'right')}
+                                    />
                                 </>
                             ) : (
-                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
+                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>  
                                     <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Division name</InputLabel>
                                     <Select
                                         value={selectedDivision}
@@ -192,17 +227,24 @@ export const DataTransform = () => {
                                         ))}
                                     </Select>
                                 </FormControl>
-                            )}
+                            )}  
                         </Box>
                     )}
 
                     {/* Foreman Selection */}
-                    {selectedRoute ? null : (
+                    {selectedDivision && !selectedRoute && (
                         <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
                             {selectedForeman ? (
                                 <>
                                     <ArrowBackIcon onClick={handleBackButton(setSelectedForeman, 'foreman')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                    <Typography sx={{ fontSize: '12px' }}>{selectedForeman}</Typography>
+                                    <Typography sx={{ fontSize: '12px' }}>{selectedDivision}</Typography>
+                                    <ArrowNavigator
+                                        labelChoice='Foreman name'
+                                        options={foremanOptions}
+                                        selectedOption={selectedForeman}
+                                        onChange={handleChange(setSelectedForeman, 'foreman')}
+                                        onArrowClick={handleArrowClick(setSelectedForeman, 'foreman', foremanOptions, 'right')}
+                                    />
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
@@ -222,12 +264,19 @@ export const DataTransform = () => {
                     )}
 
                     {/* Route Selection */}
-                    {selectedDivision && selectedForeman && (
+                    {selectedForeman && !selectedFacility && (
                         <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
                             {selectedRoute ? (
                                 <>
                                     <ArrowBackIcon onClick={handleBackButton(setSelectedRoute, 'route')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                    <Typography variant="body1" sx={{ fontSize: '12px' }}>{selectedRoute}</Typography>
+                                    <Typography variant="body1" sx={{ fontSize: '12px', marginRight: '8px' }}>{selectedForeman}</Typography>
+                                    <ArrowNavigator
+                                        labelChoice='Route name'
+                                        options={routeOptions}
+                                        selectedOption={selectedRoute}
+                                        onChange={handleChange(setSelectedRoute, 'route')}
+                                        onArrowClick={handleArrowClick(setSelectedRoute, 'route', routeOptions, 'right')}
+                                    />
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
@@ -246,23 +295,37 @@ export const DataTransform = () => {
                         </Box>
                     )}
 
-                    {/* Facility Selection */}
+                     {/* Facility Selection */}
                     {selectedRoute && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
-                            <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
-                                <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Facility name</InputLabel>
-                                <Select
-                                    value={selectedFacility}
-                                    onChange={handleChange(setSelectedFacility, 'facility')}
-                                    sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
-                                >
-                                    {facilityOptions.map((name, index) => (
-                                        <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    )}
+                                <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
+                                    {selectedFacility ? (
+                                        <>
+                                            <ArrowBackIcon onClick={handleBackButton(setSelectedFacility, 'facility')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
+                                            <Typography variant="body1" sx={{ fontSize: '12px' }}>{selectedRoute}</Typography>
+                                            <ArrowNavigator
+                                                labelChoice='Facility name'
+                                                options={facilityOptions}
+                                                selectedOption={selectedFacility}
+                                                onChange={handleChange(setSelectedFacility, 'facility')}
+                                                onArrowClick={handleArrowClick(setSelectedFacility, 'facility', facilityOptions, 'right')}
+                                            />
+                                        </>
+                                    ) : (
+                                        <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
+                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Facility name</InputLabel>
+                                            <Select
+                                                value={selectedFacility}
+                                                onChange={handleChange(setSelectedFacility, 'facility')}
+                                                sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
+                                            >
+                                                {facilityOptions.map((name, index) => (
+                                                    <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    )}
+                                </Box>
+                            )}
                 </Box>
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '65px' }}>
