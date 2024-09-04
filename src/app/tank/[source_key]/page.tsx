@@ -185,7 +185,7 @@ const TankPage: React.FC = () => {
     return (
         <div style={{ position: 'fixed', height: '100vh', width: '100vw' }}>
             <Link href={returnUrl}>
-                <ArrowBackIcon sx={{ position: 'absolute', left: '16px', cursor: 'pointer', fontSize: '3rem', marginTop: '16px'}} />
+                <ArrowBackIcon sx={{ position: 'absolute', left: '16px', cursor: 'pointer', fontSize: 28, marginTop: '16px'}} />
             </Link>
             <div style={{ height: 'calc(100% - 32px)', width: '100%', maxWidth: '100%', marginTop: '32px' }}>
                 <LineChart tankTS={tankTSdata.timeseries} tank_type_selected={tank_type_selected} chartTitle={chartTitle_lower} />
