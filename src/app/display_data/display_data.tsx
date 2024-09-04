@@ -25,6 +25,8 @@ export const DataTransform: React.FC = () => {
     const [propertyId, setPropertyId] = useState<string[]>([]);    
     const [selectedScadID, setSelectedScadaID] = useState<string | null>(null);
     const [second_sk, setSecondSK] = useState<string>('');
+
+    const [chartTitle, setSelectedChartTitle] = useState<string>('');
   
     const router = useRouter(); // Initialize the router
     const searchParams = useSearchParams();
@@ -119,10 +121,10 @@ export const DataTransform: React.FC = () => {
 
     const handleArrowClick = (setter: React.Dispatch<React.SetStateAction<string>>, key: string, options: string[], direction: 'left' | 'right') => () => {
         const currentValue = key === 'division' ? selectedDivision
-                                : key === 'foreman' ? selectedForeman
-                                : key === 'route' ? selectedRoute
-                                : key === 'facility' ? selectedFacility
-                                : '';
+                            : key === 'foreman' ? selectedForeman
+                            : key === 'route' ? selectedRoute
+                            : key === 'facility' ? selectedFacility
+                            : '';
                                 
         const currentIndex = options.indexOf(currentValue);
         let newIndex = direction === 'left' ? currentIndex - 1 : currentIndex + 1;
@@ -145,8 +147,10 @@ export const DataTransform: React.FC = () => {
         updateUrlWithSelections(newParams);
     };
     
+    const handleTankCardClick = (source_key: string, inchestoesd: number | null, tank: any, facilityName: string) => {
+        const title = (`${facilityName} ${tank.tank_type} Tank ${tank.tank_number}`);
+        setSelectedChartTitle(title)
 
-    const handleTankCardClick = (source_key: string, inchestoesd: number | null) => {
         const isEsd = inchestoesd !== null;
         const esdQuery = isEsd ? '?is-esd=true' : '';
         const tank_type = source_key.charAt(5);
@@ -159,8 +163,8 @@ export const DataTransform: React.FC = () => {
 
         const currentUrl = window.location.href;
         const finalUrl = isEsd 
-            ? `/tank/${source_key}${tankTypeQuery}&${esdQuery}&second_sk=${second_sk}&returnUrl=${encodeURIComponent(currentUrl)}` 
-            : `/tank/${source_key}${tankTypeQuery}&${esdQuery}&returnUrl=${encodeURIComponent(currentUrl)}`;
+            ? `/tank/${source_key}${tankTypeQuery}&${esdQuery}&second_sk=${second_sk}&returnUrl=${encodeURIComponent(currentUrl)}&chartTitle=${encodeURIComponent(title)}` 
+            : `/tank/${source_key}${tankTypeQuery}&${esdQuery}&returnUrl=${encodeURIComponent(currentUrl)}&chartTitle=${encodeURIComponent(title)}`;
         
         router.push(finalUrl);
     };
@@ -197,15 +201,18 @@ export const DataTransform: React.FC = () => {
     return (
         <SuspenseBoundary>
             <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', marginBottom: '20px', backgroundColor:'#282b30', width:'100%', paddingTop:'6px', paddingLeft:'10px', paddingBottom:'2px', boxShadow:'0px 10px 8px rgba(0, 0, 0, 0.1)' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', marginBottom: '20px', backgroundColor:'#282b30', width:'100%', paddingTop:'15px', paddingLeft:'10px', paddingBottom:'2px', boxShadow:'0px 10px 8px rgba(0, 0, 0, 0.1)',  justifyContent: 'center' }}>
                     
                     {/* Division Level */}
                     {selectedForeman || selectedRoute ? null : (
-                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '200px' }}>
                             {selectedDivision ? (
                                 <>
-                                    <ArrowBackIcon onClick={handleBackButton(setSelectedDivision, 'division')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                    <Typography sx={{ fontSize: '12px' }}>ALL</Typography>
+                                    <div onClick={handleBackButton(setSelectedDivision, 'division')} style= {{display: 'flex', alignItems: 'center', cursor: 'pointer', marginRight:'30px'}}>
+                                        <ArrowBackIcon sx={{marginRight: '5px'}}/>
+                                        <Typography variant="body1" sx={{ marginLeft: '2px', fontSize: '12px',  marginRight: '8px' }}>ALL</Typography>
+                                    </div>    
+
                                     <ArrowNavigator
                                         labelChoice='Division name'
                                         options={divisionOptions}
@@ -215,7 +222,7 @@ export const DataTransform: React.FC = () => {
                                     />
                                 </>
                             ) : (
-                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>  
+                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>  
                                     <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Division name</InputLabel>
                                     <Select
                                         value={selectedDivision}
@@ -234,11 +241,14 @@ export const DataTransform: React.FC = () => {
 
                     {/* Foreman Selection */}
                     {selectedDivision && !selectedRoute && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '200px' }}>
                             {selectedForeman ? (
                                 <>
-                                    <ArrowBackIcon onClick={handleBackButton(setSelectedForeman, 'foreman')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                    <Typography sx={{ fontSize: '12px' }}>{selectedDivision}</Typography>
+                                    <div onClick={handleBackButton(setSelectedForeman, 'foreman')} style= {{display: 'flex', alignItems: 'center', cursor: 'pointer', marginRight:'30px'}}>
+                                        <ArrowBackIcon sx={{marginRight: '5px'}}/>
+                                        <Typography variant="body1" sx={{ marginLeft: '2px', fontSize: '12px',  marginRight: '8px' }}>{selectedDivision}</Typography>
+                                    </div>       
+
                                     <ArrowNavigator
                                         labelChoice='Foreman name'
                                         options={foremanOptions}
@@ -248,7 +258,7 @@ export const DataTransform: React.FC = () => {
                                     />
                                 </>
                             ) : (
-                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
+                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
                                     <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Foreman name</InputLabel>
                                     <Select
                                         value={selectedForeman}
@@ -267,11 +277,14 @@ export const DataTransform: React.FC = () => {
 
                     {/* Route Selection */}
                     {selectedForeman && !selectedFacility && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '200px' }}>
                             {selectedRoute ? (
                                 <>
-                                    <ArrowBackIcon onClick={handleBackButton(setSelectedRoute, 'route')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                    <Typography variant="body1" sx={{ fontSize: '12px', marginRight: '8px' }}>{selectedForeman}</Typography>
+                                    <div onClick={handleBackButton(setSelectedRoute, 'route')} style= {{display: 'flex', alignItems: 'center', cursor: 'pointer', marginRight:'30px'}}>
+                                        <ArrowBackIcon sx={{marginRight: '5px'}}/>
+                                        <Typography variant="body1" sx={{ marginLeft: '2px', fontSize: '12px',  marginRight: '8px' }}>{selectedForeman}</Typography>
+                                    </div>
+                            
                                     <ArrowNavigator
                                         labelChoice='Route name'
                                         options={routeOptions}
@@ -281,7 +294,7 @@ export const DataTransform: React.FC = () => {
                                     />
                                 </>
                             ) : (
-                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
+                                <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
                                     <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Route name</InputLabel>
                                     <Select
                                         value={selectedRoute}
@@ -300,11 +313,14 @@ export const DataTransform: React.FC = () => {
 
                      {/* Facility Selection */}
                     {selectedRoute && (
-                                <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '150px' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '200px' }}>
                                     {selectedFacility ? (
                                         <>
-                                            <ArrowBackIcon onClick={handleBackButton(setSelectedFacility, 'facility')} sx={{ cursor: 'pointer', marginRight: '8px' }} />
-                                            <Typography variant="body1" sx={{ fontSize: '12px' }}>{selectedRoute}</Typography>
+                                            <div onClick={handleBackButton(setSelectedFacility, 'facility')} style= {{display: 'flex', alignItems: 'center', cursor: 'pointer', marginRight:'30px'}}>
+                                                <ArrowBackIcon sx={{marginRight: '5px'}}/>
+                                                <Typography variant="body1" sx={{ marginLeft: '2px', fontSize: '12px' }}>{selectedRoute}</Typography>
+                                            </div>
+
                                             <ArrowNavigator
                                                 labelChoice='Facility name'
                                                 options={facilityOptions}
@@ -314,8 +330,8 @@ export const DataTransform: React.FC = () => {
                                             />
                                         </>
                                     ) : (
-                                        <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px' }}>
-                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Facility name</InputLabel>
+                                        <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '150px', height: '30px', marginLeft: '10px' }}>
+                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '4px' }}>Facility name</InputLabel>
                                             <Select
                                                 value={selectedFacility}
                                                 onChange={handleChange(setSelectedFacility, 'facility')}
@@ -343,7 +359,7 @@ export const DataTransform: React.FC = () => {
                                     {tanks.map((tank, index) => (
                                         <Box key={index} sx={{ width: '100%', maxWidth: '300px' }}>
                                             <Suspense fallback={<div>Loading...</div>}>
-                                                <TankCard tank={tank} onClick={() => handleTankCardClick(tank.source_key, tank.inches_to_esd)} />
+                                                <TankCard tank={tank} onClick={() => handleTankCardClick(tank.source_key, tank.inches_to_esd, tank, facilityName)} />
                                             </Suspense>
                                         </Box>
                                     ))}

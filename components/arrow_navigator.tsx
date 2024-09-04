@@ -14,16 +14,23 @@ interface ArrowNavigatorProps {
 const ArrowNavigator: React.FC<ArrowNavigatorProps> = ({ labelChoice, options, selectedOption, onChange, onArrowClick }) => {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton onClick={() => onArrowClick('left')} sx={{ marginRight: '8px'}}>
-                <ArrowBackIcon sx={{ color:'white' }}/>
+            <IconButton onClick={() => onArrowClick('left')} sx={{ marginRight: '8px' }}>
+                <ArrowBackIcon sx={{ color: 'white' }} />
             </IconButton>
-            <FormControl fullWidth >
-                <InputLabel sx={{ color:'#a4a7a7' }}>{labelChoice}</InputLabel>
+            <FormControl sx={{ width: '160px' }}> 
+                <InputLabel sx={{ color: '#a4a7a7' }}>{labelChoice}</InputLabel>
                 <Select
                     value={selectedOption}
                     onChange={onChange}
-                    sx={{ height: '30px', fontSize: '12px', color:'white', backgroundColor:'#424549', '.MuiSelect-icon': { color: 'white' }  }}
-                    inputProps={{MenuProps: {disableScrollLock: true}}}
+                    sx={{ 
+                        height: '30px', 
+                        fontSize: '12px', 
+                        color: 'white', 
+                        backgroundColor: '#424549', 
+                        '.MuiSelect-icon': { color: 'white' },
+                        width: '100%' 
+                    }}
+                    inputProps={{ MenuProps: { disableScrollLock: true } }}
                 >
                     {options.map(option => (
                         <MenuItem key={option} value={option}>{option}</MenuItem>
@@ -31,7 +38,7 @@ const ArrowNavigator: React.FC<ArrowNavigatorProps> = ({ labelChoice, options, s
                 </Select>
             </FormControl>
             <IconButton onClick={() => onArrowClick('right')} sx={{ marginLeft: '8px' }}>
-                <ArrowForwardIcon sx={{ color:'white' }} />
+                <ArrowForwardIcon sx={{ color: 'white' }} />
             </IconButton>
         </Box>
     );

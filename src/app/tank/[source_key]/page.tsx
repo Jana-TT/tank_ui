@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { fetchTankTsData } from '../../../../components/data_fetch';
-import { Line } from 'react-chartjs-2';
+import { Chart, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, Title } from 'chart.js';
 import { TankTs, TankTsData } from '../../../../components/interfaces';
 import { ChartOptions, ChartData, ChartDataset } from 'chart.js';
@@ -69,33 +69,41 @@ const generateDatasets = (tankTS: TankTs[], selectedTankType: string): ChartData
     return datasets;
 };
 
-const LineChart: React.FC<{ tankTS: TankTs[], tank_type_selected: string | null }> = ({ tankTS, tank_type_selected }) => {
+const LineChart: React.FC<{ tankTS: TankTs[], tank_type_selected: string | null, chartTitle: string }> = ({ tankTS, tank_type_selected, chartTitle }) => {
     const selectedTankType = tank_type_selected || 'DefaultTankType'; // Handle null case
 
     // Converting timestamps to local strings
     const timestamps = tankTS[0]?.timestamps.map(ts => new Date(ts).toLocaleString()) || [];
     const datasets = generateDatasets(tankTS, selectedTankType);
 
-    // Type the data object so i dont get typescript errors
+    // Type the data object so I don't get TypeScript errors
     const data: ChartData<'line', number[], string> = {
         labels: timestamps,
         datasets, // This will always be an array of ChartDataset<'line', number[]>
     };
 
-    const options: ChartOptions<'line'> = {
+    const options = (chartTitle: string): ChartOptions<'line'> => ({
         responsive: true, 
         maintainAspectRatio: true,
         scales: {
             x: {
+                grid: {
+                    color: '#282b30', // Set the color of the grid lines for the x-axis
+                },
                 title: {
                     display: true,
                     text: 'Timestamp',
+                    color: '#FFFFFF'
                 },
             },
             y: {
+                grid: {
+                    color: '#282b30', // Set the color of the grid lines for the x-axis
+                },
                 title: {
                     display: true,
                     text: 'Value',
+                    color: '#FFFFFF'
                 },
                 beginAtZero: true,
             },
@@ -118,15 +126,25 @@ const LineChart: React.FC<{ tankTS: TankTs[], tank_type_selected: string | null 
             legend: {
                 display: true,
                 position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Tank Metrics Over Time ',
+                labels: {
+                    color: 'white', 
+                    font: {
+                        size: 12, 
+                    },
             },
         },
-    };
-
-    return <Line data={data} options={options} />;
+            title: {
+                display: true,
+                text: chartTitle, 
+                color: '#FFFFFF',
+                font: {
+                    size: 16, 
+                }
+            },
+        },
+    });
+    
+    return <Line data={data} options={options(chartTitle || 'Default Chart Title')} />;
 };
 
 const TankPage: React.FC = () => {
@@ -139,6 +157,10 @@ const TankPage: React.FC = () => {
 
     const esd_source_key = searchParams.get('second_sk');
     const tank_type_selected = searchParams.get('tank-type');
+
+    const chartTitle = searchParams.get('chartTitle') || 'Default Chart Title'; // default title if no exist
+    const chartTitle_lower = chartTitle.toUpperCase()
+
 
     const returnUrl = searchParams.get('returnUrl') || '/';
 
@@ -163,10 +185,10 @@ const TankPage: React.FC = () => {
     return (
         <div style={{ position: 'fixed', height: '100vh', width: '100vw' }}>
             <Link href={returnUrl}>
-                <ArrowBackIcon sx={{ position: 'absolute', left: '16px', cursor: 'pointer' }} />
+                <ArrowBackIcon sx={{ position: 'absolute', left: '16px', cursor: 'pointer', fontSize: '3rem', marginTop: '16px'}} />
             </Link>
             <div style={{ height: 'calc(100% - 32px)', width: '100%', maxWidth: '100%', marginTop: '32px' }}>
-                <LineChart tankTS={tankTSdata.timeseries} tank_type_selected={tank_type_selected} />
+                <LineChart tankTS={tankTSdata.timeseries} tank_type_selected={tank_type_selected} chartTitle={chartTitle_lower} />
             </div>
         </div>
     );
