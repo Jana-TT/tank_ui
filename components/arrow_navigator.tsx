@@ -14,7 +14,7 @@ interface ArrowNavigatorProps {
 const ArrowNavigator: React.FC<ArrowNavigatorProps> = ({ labelChoice, options, selectedOption, onChange, onArrowClick }) => {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton onClick={() => onArrowClick('left')} sx={{ marginRight: '8px' }}>
+            <IconButton onClick={() => onArrowClick('left')} sx={{ marginRight: '8px'}}>
                 <ArrowBackIcon />
             </IconButton>
             <FormControl fullWidth>
@@ -22,7 +22,8 @@ const ArrowNavigator: React.FC<ArrowNavigatorProps> = ({ labelChoice, options, s
                 <Select
                     value={selectedOption}
                     onChange={onChange}
-                    sx={{ height: '30px' }}
+                    sx={{ height: '30px', fontSize: '12px', color:'#a4a7a7' }}
+                    inputProps={{MenuProps: {disableScrollLock: true}}}
                 >
                     {options.map(option => (
                         <MenuItem key={option} value={option}>{option}</MenuItem>

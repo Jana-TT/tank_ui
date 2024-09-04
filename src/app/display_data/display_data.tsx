@@ -221,6 +221,7 @@ export const DataTransform: React.FC = () => {
                                         value={selectedDivision}
                                         onChange={handleChange(setSelectedDivision, 'division')}
                                         sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
+                                        inputProps={{MenuProps: {disableScrollLock: true}}}
                                     >
                                         {divisionOptions.map((name, index) => (
                                             <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
@@ -253,6 +254,7 @@ export const DataTransform: React.FC = () => {
                                         value={selectedForeman}
                                         onChange={handleChange(setSelectedForeman, 'foreman')}
                                         sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
+                                        inputProps={{MenuProps: {disableScrollLock: true}}}
                                     >
                                         {foremanOptions.map((name, index) => (
                                             <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
@@ -285,6 +287,7 @@ export const DataTransform: React.FC = () => {
                                         value={selectedRoute}
                                         onChange={handleChange(setSelectedRoute, 'route')}
                                         sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
+                                        inputProps={{MenuProps: {disableScrollLock: true}}}
                                     >
                                         {routeOptions.map((name, index) => (
                                             <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
@@ -317,6 +320,7 @@ export const DataTransform: React.FC = () => {
                                                 value={selectedFacility}
                                                 onChange={handleChange(setSelectedFacility, 'facility')}
                                                 sx={{ height: '30px', fontSize: '12px', padding: '8px' }}
+                                                inputProps={{MenuProps: {disableScrollLock: true}}}
                                             >
                                                 {facilityOptions.map((name, index) => (
                                                     <MenuItem key={index} value={name} sx={{ fontSize: '12px' }}>{name}</MenuItem>
