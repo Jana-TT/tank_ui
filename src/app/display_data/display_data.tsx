@@ -223,7 +223,7 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>  
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Division name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7'}}>Division name</InputLabel>
                                     <Select
                                         value={selectedDivision}
                                         onChange={handleChange(setSelectedDivision, 'division')}
@@ -331,7 +331,7 @@ export const DataTransform: React.FC = () => {
                                         </>
                                     ) : (
                                         <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '150px', height: '30px', marginLeft: '10px' }}>
-                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '4px' }}>Facility name</InputLabel>
+                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '8px' }}>Facility name</InputLabel>
                                             <Select
                                                 value={selectedFacility}
                                                 onChange={handleChange(setSelectedFacility, 'facility')}
