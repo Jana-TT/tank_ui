@@ -204,21 +204,21 @@ export const DataTransform: React.FC = () => {
                     paddingBottom: '2px', boxShadow: '0px 10px 8px rgba(0, 0, 0, 0.1)', justifyContent: 'center', position: 'relative' }}>
 
                     {/* GitHub & Docs */}
-                    <Box sx={{ display: 'flex', position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap'}}>
+                    <Box sx={{ display: 'flex', position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap', marginTop: '8px'}}>
                         <Button href="https://github.com/Jana-TT/tank_ui" sx={{display: 'flex', backgroundColor:'#1a1a1a', '&:hover': {outline: '1px solid #FFFFFF'} }}>
-                            <img src="BigGithubLogo.svg" width={30}/>
+                            <img src="BigGithubLogo.svg" width={25}/>
                             <Typography sx={{color:'#BDD5E7', textDecoration: 'underline', marginLeft:'4px', textTransform: 'none'}}>UI Code</Typography>
                         </Button>
 
                         <Button href="https://github.com/Jana-TT/tank_project_2" sx={{display: 'flex', backgroundColor:'#1a1a1a', marginLeft:'10px', '&:hover': {outline: '1px solid #FFFFFF'} }}>
-                            <img src="BigGithubLogo.svg" width={30}/>
+                            <img src="BigGithubLogo.svg" width={25}/>
                             <Typography sx={{color:'#BDD5E7', textDecoration: 'underline', marginLeft:'4px', textTransform: 'none'}}>API Code</Typography>
                         </Button>
                     </Box>
 
-                    <Box sx={{ display: 'flex', position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap' }}>
+                    <Box sx={{ display: 'flex', position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap',marginTop: '8px' }}>
                         <Button href="https://tanks-api.wolfeydev.com/docs" sx={{ display: 'flex', backgroundColor: '#1a1a1a', marginLeft: '10px', '&:hover': {outline: '1px solid #009688'} }}>
-                            <img src="FastAPI.svg" width={30} />
+                            <img src="FastAPI.svg" width={25} />
                             <Typography sx={{ color: '#BDD5E7', textDecoration: 'underline', marginLeft: '4px', textTransform: 'none' }}>
                                 Docs
                             </Typography>
@@ -246,8 +246,10 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>  
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {
-                                                transform: 'translate(0, -15px) scale(0.75)'} }}>Division name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', position: 'absolute', top: '-25%', '&.Mui-focused': { color: '#FFFFFF' }, 
+                                        '&.MuiInputLabel-shrink': {transform: 'translate(0, -7px) scale(0.75)'} }}>
+                                            Division name
+                                    </InputLabel>
                                     <Select
                                         value={selectedDivision}
                                         onChange={handleChange(setSelectedDivision, 'division')}
@@ -286,8 +288,10 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {
-                                                transform: 'translate(0, -15px) scale(0.75)'} }}>Foreman name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', position: 'absolute', top: '-25%', '&.Mui-focused': { color: '#FFFFFF' }, 
+                                        '&.MuiInputLabel-shrink': {transform: 'translate(0, -7px) scale(0.75)'} }}>
+                                            Foreman name
+                                    </InputLabel> 
                                     <Select
                                         value={selectedForeman}
                                         onChange={handleChange(setSelectedForeman, 'foreman')}
@@ -326,8 +330,10 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {
-                                                transform: 'translate(0, -15px) scale(0.75)'} }}>Route name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', position: 'absolute', top: '-25%', 
+                                    '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {transform: 'translate(0, -7px) scale(0.75)'} }}>
+                                        Route name
+                                    </InputLabel>
                                     <Select
                                         value={selectedRoute}
                                         onChange={handleChange(setSelectedRoute, 'route')}
@@ -366,8 +372,10 @@ export const DataTransform: React.FC = () => {
                                         </>
                                     ) : (
                                         <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '150px', height: '30px', marginLeft: '10px' }}>
-                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '8px', '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {
-                                                transform: 'translate(0, -15px) scale(0.75)'} }}>Facility name</InputLabel>
+                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '8px', position: 'absolute', top: '-25%', 
+                                            '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': { transform: 'translate(0, -7px) scale(0.75)'} }}>
+                                                Facility name
+                                            </InputLabel>
                                             <Select
                                                 value={selectedFacility}
                                                 onChange={handleChange(setSelectedFacility, 'facility')}
