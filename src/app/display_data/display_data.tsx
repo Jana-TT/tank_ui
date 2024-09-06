@@ -3,11 +3,10 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { fetchFacilityData, fetchTanksData } from '../../../components/data_fetch';
 import { TankData, FacilityData } from '../../../components/interfaces';
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography, Grid } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography, Grid, Button } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import SuspenseBoundary from '../../../components/suspense_boundary';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowNavigator from '../../../components/arrow_navigator';
 
 const TankCard = lazy(() => import('../../../components/tank_card'));
@@ -201,8 +200,32 @@ export const DataTransform: React.FC = () => {
     return (
         <SuspenseBoundary>
             <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', marginBottom: '20px', backgroundColor:'#282b30', width:'100%', paddingTop:'15px', paddingLeft:'10px', paddingBottom:'2px', boxShadow:'0px 10px 8px rgba(0, 0, 0, 0.1)',  justifyContent: 'center' }}>
-                    
+                <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', marginBottom: '20px', backgroundColor: '#282b30', width: '100%', paddingTop: '15px', paddingLeft: '10px', 
+                    paddingBottom: '2px', boxShadow: '0px 10px 8px rgba(0, 0, 0, 0.1)', justifyContent: 'center', position: 'relative' }}>
+
+                    {/* GitHub & Docs */}
+                    <Box sx={{ display: 'flex', position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap'}}>
+                        <Button href="https://github.com/Jana-TT/tank_ui" sx={{display: 'flex', backgroundColor:'#1a1a1a', '&:hover': {outline: '1px solid #FFFFFF'} }}>
+                            <img src="BigGithubLogo.svg" width={30}/>
+                            <Typography sx={{color:'#BDD5E7', textDecoration: 'underline', marginLeft:'4px', textTransform: 'none'}}>UI Code</Typography>
+                        </Button>
+
+                        <Button href="https://github.com/Jana-TT/tank_project_2" sx={{display: 'flex', backgroundColor:'#1a1a1a', marginLeft:'10px', '&:hover': {outline: '1px solid #FFFFFF'} }}>
+                            <img src="BigGithubLogo.svg" width={30}/>
+                            <Typography sx={{color:'#BDD5E7', textDecoration: 'underline', marginLeft:'4px', textTransform: 'none'}}>API Code</Typography>
+                        </Button>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap' }}>
+                        <Button href="https://tanks-api.wolfeydev.com/docs" sx={{ display: 'flex', backgroundColor: '#1a1a1a', marginLeft: '10px', '&:hover': {outline: '1px solid #009688'} }}>
+                            <img src="FastAPI.svg" width={30} />
+                            <Typography sx={{ color: '#BDD5E7', textDecoration: 'underline', marginLeft: '4px', textTransform: 'none' }}>
+                                Docs
+                            </Typography>
+                        </Button>
+                    </Box>
+
+
                     {/* Division Level */}
                     {selectedForeman || selectedRoute ? null : (
                         <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px', border: '10px', borderRadius: '25px', minWidth: '200px' }}>
@@ -223,7 +246,7 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>  
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7'}}>Division name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' } }}>Division name</InputLabel>
                                     <Select
                                         value={selectedDivision}
                                         onChange={handleChange(setSelectedDivision, 'division')}
@@ -259,7 +282,7 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Foreman name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' } }}>Foreman name</InputLabel>
                                     <Select
                                         value={selectedForeman}
                                         onChange={handleChange(setSelectedForeman, 'foreman')}
@@ -295,7 +318,7 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7' }}>Route name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' } }}>Route name</InputLabel>
                                     <Select
                                         value={selectedRoute}
                                         onChange={handleChange(setSelectedRoute, 'route')}
@@ -331,7 +354,7 @@ export const DataTransform: React.FC = () => {
                                         </>
                                     ) : (
                                         <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '150px', height: '30px', marginLeft: '10px' }}>
-                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '8px' }}>Facility name</InputLabel>
+                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '8px', '&.Mui-focused': { color: '#FFFFFF' } }}>Facility name</InputLabel>
                                             <Select
                                                 value={selectedFacility}
                                                 onChange={handleChange(setSelectedFacility, 'facility')}
@@ -367,7 +390,10 @@ export const DataTransform: React.FC = () => {
                             </Box>
                         ))
                     ) : (
-                        <Typography variant="h6" sx={{ color: 'white' }}>Begin by selecting a division to view tanks.</Typography>
+                        <div>
+                            <Typography variant="h6" sx={{ color: 'white' }}>Begin by selecting a division to view tanks.</Typography>
+                            <Typography variant="h6" sx={{ color: 'white' }}>At any selection level, you can press on a tank card to see its timeseries data.</Typography>
+                        </div>
                     )}
                 </Box>
             </Box>
