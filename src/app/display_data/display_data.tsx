@@ -7,6 +7,7 @@ import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typo
 import { useRouter, useSearchParams } from 'next/navigation';
 import SuspenseBoundary from '../../../components/suspense_boundary';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Home, HomeOutlined, HomeRounded, HomeSharp, HomeTwoTone } from '@mui/icons-material';
 import ArrowNavigator from '../../../components/arrow_navigator';
 
 const TankCard = lazy(() => import('../../../components/tank_card'));
@@ -216,7 +217,11 @@ export const DataTransform: React.FC = () => {
                         </Button>
                     </Box>
 
-                    <Box sx={{ display: 'flex', position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap',marginTop: '8px' }}>
+                    <Box sx={{ display: 'flex', position: 'absolute', left: '0px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap',marginTop: '8px' }}>
+                        <Button href="/" sx={{ display: 'flex', backgroundColor: '#1a1a1a', marginLeft: '10px', '&:hover': {outline: '1px solid #009688'} }}>
+                            <HomeRounded sx={{ fontSize:30, color: '#FFFFFF' }} />
+                        </Button>
+
                         <Button href="https://tanks-api.wolfeydev.com/docs" sx={{ display: 'flex', backgroundColor: '#1a1a1a', marginLeft: '10px', '&:hover': {outline: '1px solid #009688'} }}>
                             <img src="FastAPI.svg" width={25} />
                             <Typography sx={{ color: '#BDD5E7', textDecoration: 'underline', marginLeft: '4px', textTransform: 'none' }}>
