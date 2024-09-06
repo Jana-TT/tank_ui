@@ -250,7 +250,10 @@ export const DataTransform: React.FC = () => {
                                     <Select
                                         value={selectedDivision}
                                         onChange={handleChange(setSelectedDivision, 'division')}
-                                        sx={{ height: '30px', fontSize: '12px', padding: '8px', '.MuiSelect-icon': { color: 'white' } }}
+                                        sx={{ height: '30px', fontSize: '12px', padding: '8px', '.MuiSelect-icon': { color: 'white' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                            borderColor: 'white', 
+                                            borderWidth: '1px'
+                                          } }}
                                         inputProps={{MenuProps: {disableScrollLock: true}}}
                                     >
                                         {divisionOptions.map((name, index) => (
@@ -286,7 +289,10 @@ export const DataTransform: React.FC = () => {
                                     <Select
                                         value={selectedForeman}
                                         onChange={handleChange(setSelectedForeman, 'foreman')}
-                                        sx={{ height: '30px', fontSize: '12px', padding: '8px', '.MuiSelect-icon': { color: 'white' } }}
+                                        sx={{ height: '30px', fontSize: '12px', padding: '8px', '.MuiSelect-icon': { color: 'white' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                            borderColor: 'white', 
+                                            borderWidth: '1px'
+                                          }, }}
                                         inputProps={{MenuProps: {disableScrollLock: true}}}
                                     >
                                         {foremanOptions.map((name, index) => (
@@ -322,7 +328,10 @@ export const DataTransform: React.FC = () => {
                                     <Select
                                         value={selectedRoute}
                                         onChange={handleChange(setSelectedRoute, 'route')}
-                                        sx={{ height: '30px', fontSize: '12px', padding: '8px', '.MuiSelect-icon': { color: 'white' } }}
+                                        sx={{ height: '30px', fontSize: '12px', padding: '8px', '.MuiSelect-icon': { color: 'white' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                            borderColor: 'white', 
+                                            borderWidth: '1px'
+                                          }, }}
                                         inputProps={{MenuProps: {disableScrollLock: true}}}
                                     >
                                         {routeOptions.map((name, index) => (
@@ -358,7 +367,10 @@ export const DataTransform: React.FC = () => {
                                             <Select
                                                 value={selectedFacility}
                                                 onChange={handleChange(setSelectedFacility, 'facility')}
-                                                sx={{ height: '30px', fontSize: '12px', padding: '8px', '.MuiSelect-icon': { color: 'white' } }}
+                                                sx={{ height: '30px', fontSize: '12px', padding: '8px', '.MuiSelect-icon': { color: 'white' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                    borderColor: 'white', 
+                                                    borderWidth: '1px'
+                                                }, }}
                                                 inputProps={{MenuProps: {disableScrollLock: true}}}
                                             >
                                                 {facilityOptions.map((name, index) => (
