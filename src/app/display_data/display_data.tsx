@@ -246,7 +246,8 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>  
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' } }}>Division name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {
+                                                transform: 'translate(0, -15px) scale(0.75)'} }}>Division name</InputLabel>
                                     <Select
                                         value={selectedDivision}
                                         onChange={handleChange(setSelectedDivision, 'division')}
@@ -285,7 +286,8 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' } }}>Foreman name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {
+                                                transform: 'translate(0, -15px) scale(0.75)'} }}>Foreman name</InputLabel>
                                     <Select
                                         value={selectedForeman}
                                         onChange={handleChange(setSelectedForeman, 'foreman')}
@@ -324,7 +326,8 @@ export const DataTransform: React.FC = () => {
                                 </>
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
-                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' } }}>Route name</InputLabel>
+                                    <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {
+                                                transform: 'translate(0, -15px) scale(0.75)'} }}>Route name</InputLabel>
                                     <Select
                                         value={selectedRoute}
                                         onChange={handleChange(setSelectedRoute, 'route')}
@@ -363,14 +366,15 @@ export const DataTransform: React.FC = () => {
                                         </>
                                     ) : (
                                         <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '150px', height: '30px', marginLeft: '10px' }}>
-                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '8px', '&.Mui-focused': { color: '#FFFFFF' } }}>Facility name</InputLabel>
+                                            <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '8px', '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {
+                                                transform: 'translate(0, -15px) scale(0.75)'} }}>Facility name</InputLabel>
                                             <Select
                                                 value={selectedFacility}
                                                 onChange={handleChange(setSelectedFacility, 'facility')}
                                                 sx={{ height: '30px', fontSize: '12px', padding: '8px', '.MuiSelect-icon': { color: 'white' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                                                     borderColor: 'white', 
                                                     borderWidth: '1px'
-                                                }, }}
+                                                } }}
                                                 inputProps={{MenuProps: {disableScrollLock: true}}}
                                             >
                                                 {facilityOptions.map((name, index) => (
