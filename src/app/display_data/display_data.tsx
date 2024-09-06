@@ -204,7 +204,7 @@ export const DataTransform: React.FC = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', marginBottom: '20px', backgroundColor: '#282b30', width: '100%', paddingTop: '15px', paddingLeft: '10px', 
                     paddingBottom: '2px', boxShadow: '0px 10px 8px rgba(0, 0, 0, 0.1)', justifyContent: 'center', position: 'relative' }}>
 
-                    {/* GitHub & Docs */}
+                    {/* GitHub, Home, Docs Buttons*/}
                     <Box sx={{ display: 'flex', position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap', marginTop: '8px'}}>
                         <Button href="https://github.com/Jana-TT/tank_ui" sx={{display: 'flex', backgroundColor:'#1a1a1a', '&:hover': {outline: '1px solid #FFFFFF'} }}>
                             <img src="BigGithubLogo.svg" width={25}/>
@@ -218,7 +218,7 @@ export const DataTransform: React.FC = () => {
                     </Box>
 
                     <Box sx={{ display: 'flex', position: 'absolute', left: '0px', top: '50%', transform: 'translateY(-50%)', flexWrap: 'wrap',marginTop: '8px' }}>
-                        <Button href="/" sx={{ display: 'flex', backgroundColor: '#1a1a1a', marginLeft: '10px', '&:hover': {outline: '1px solid #009688'} }}>
+                        <Button href="/" sx={{ display: 'flex', backgroundColor: '#1a1a1a', marginLeft: '10px', '&:hover': {outline: '1px solid #FFFFFF'} }}>
                             <HomeRounded sx={{ fontSize:30, color: '#FFFFFF' }} />
                         </Button>
 
