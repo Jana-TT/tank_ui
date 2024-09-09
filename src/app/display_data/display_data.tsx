@@ -252,7 +252,7 @@ export const DataTransform: React.FC = () => {
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>  
                                     <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', position: 'absolute', top: '-25%', '&.Mui-focused': { color: '#FFFFFF' }, 
-                                        '&.MuiInputLabel-shrink': {transform: 'translate(0, -7px) scale(0.75)'} }}>
+                                        '&.MuiInputLabel-shrink': { fontSize: '15px', transform: 'translate(0, -7px) scale(0.75)'} }}>
                                             Division name
                                     </InputLabel>
                                     <Select
@@ -294,7 +294,7 @@ export const DataTransform: React.FC = () => {
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
                                     <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', position: 'absolute', top: '-25%', '&.Mui-focused': { color: '#FFFFFF' }, 
-                                        '&.MuiInputLabel-shrink': {transform: 'translate(0, -7px) scale(0.75)'} }}>
+                                        '&.MuiInputLabel-shrink': { fontSize: '15px', transform: 'translate(0, -7px) scale(0.75)'} }}>
                                             Foreman name
                                     </InputLabel> 
                                     <Select
@@ -336,7 +336,7 @@ export const DataTransform: React.FC = () => {
                             ) : (
                                 <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '100%', height: '30px', marginLeft: '10px' }}>
                                     <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', position: 'absolute', top: '-25%', 
-                                    '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': {transform: 'translate(0, -7px) scale(0.75)'} }}>
+                                    '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': { fontSize: '15px', transform: 'translate(0, -7px) scale(0.75)'} }}>
                                         Route name
                                     </InputLabel>
                                     <Select
@@ -378,7 +378,7 @@ export const DataTransform: React.FC = () => {
                                     ) : (
                                         <FormControl sx={{ backgroundColor:'#424549', borderRadius:'4px', width: '150px', height: '30px', marginLeft: '10px' }}>
                                             <InputLabel sx={{ fontSize: '12px', color:'#a4a7a7', marginBottom: '8px', position: 'absolute', top: '-25%', 
-                                            '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': { transform: 'translate(0, -7px) scale(0.75)'} }}>
+                                            '&.Mui-focused': { color: '#FFFFFF' }, '&.MuiInputLabel-shrink': { fontSize: '15px', transform: 'translate(0, -7px) scale(0.75)'} }}>
                                                 Facility name
                                             </InputLabel>
                                             <Select

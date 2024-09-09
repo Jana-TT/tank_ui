@@ -18,7 +18,7 @@ const ArrowNavigator: React.FC<ArrowNavigatorProps> = ({ labelChoice, options, s
                 <ArrowBackIcon sx={{ color: 'white' }} />
             </IconButton>
             <FormControl sx={{ width: '160px' }}> 
-                <InputLabel sx={{ color: '#a4a7a7', transform: selectedOption ? 'translate(0, -15px) scale(0.75)' : 'translate(0, 0)',  '&.Mui-focused': { color: '#FFFFFF' } }}>{labelChoice}</InputLabel>
+                <InputLabel sx={{ color: '#a4a7a7', fontSize: '15px', transform: selectedOption ? 'translate(0, -15px) scale(0.75)' : 'translate(0, 0)',  '&.Mui-focused': { color: '#FFFFFF' } }}>{labelChoice}</InputLabel>
                 <Select
                     value={selectedOption}
                     onChange={onChange}
